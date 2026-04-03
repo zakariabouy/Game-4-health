@@ -1,24 +1,41 @@
-# mission_ui.gd — Full-screen popup when kid interacts with a mission spot
-# This builds its own UI from code. Attach to a CanvasLayer node named "MissionUI".
-# SETUP: Add a CanvasLayer named "MissionUI" to your dungeon scene. Attach this script.
-#        Optionally add an AudioStreamPlayer child named "SFX" with a success jingle.
+# mission_ui.gd — Popup with pixel-art assets + launches mini-games
 extends CanvasLayer
 
-var current_mission: Dictionary = {}
+const LetterFlipGame = preload("res://games/letter_flip_game.gd")
+const DoseDodgeGame = preload("res://games/dose_dodge_game.gd")
 
-# UI nodes (created in code)
+var GAME_MAP: Dictionary = {
+	"g1": LetterFlipGame,
+	"g2": DoseDodgeGame,
+	"g3": LetterFlipGame,
+	"g6": DoseDodgeGame,
+	"a1": LetterFlipGame,
+	"a2": DoseDodgeGame,
+	"a3": LetterFlipGame,
+	"a4": DoseDodgeGame,
+	"n1": LetterFlipGame,
+	"n2": DoseDodgeGame,
+	"n3": LetterFlipGame,
+	"n4": DoseDodgeGame,
+	"u1": LetterFlipGame,
+	"u2": DoseDodgeGame,
+	"u3": LetterFlipGame,
+	"u4": DoseDodgeGame,
+}
+
+var current_mission: Dictionary = {}
+var active_game_node: Node = null
+
 var overlay: ColorRect
-var panel: PanelContainer
+var popup_bg: TextureRect
 var icon_label: Label
 var title_label: Label
 var desc_label: Label
-var play_btn: Button
-var close_btn: Button
-var done_panel: PanelContainer
-var done_label: Label
+var open_btn: TextureButton
+var close_btn: TextureButton
 
 func _ready() -> void:
-	layer = 10  # draw above everything
+	layer = 10
 
 	# ── Dark overlay ──
 	overlay = ColorRect.new()
@@ -28,141 +45,98 @@ func _ready() -> void:
 	overlay.visible = false
 	add_child(overlay)
 
-	# ── Main popup panel ──
-	panel = PanelContainer.new()
-	panel.custom_minimum_size = Vector2(360, 260)
-	panel.anchor_left = 0.5
-	panel.anchor_top = 0.5
-	panel.anchor_right = 0.5
-	panel.anchor_bottom = 0.5
-	panel.offset_left = -180
-	panel.offset_top = -130
-	panel.offset_right = 180
-	panel.offset_bottom = 130
-	panel.visible = false
+	# ── Popup background using popup.png ──
+	# popup.png is 1515x1426 (ratio ~1.06:1). Viewport is 1152x648.
+	# Display at ~380x358 → centered with offsets ±190 × ±179
+	popup_bg = TextureRect.new()
+	var popup_tex = load("res://decorations/popup.png")
+	popup_bg.texture = popup_tex
+	popup_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	popup_bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	popup_bg.anchor_left = 0.5
+	popup_bg.anchor_top = 0.5
+	popup_bg.anchor_right = 0.5
+	popup_bg.anchor_bottom = 0.5
+	popup_bg.offset_left = -190
+	popup_bg.offset_top = -179
+	popup_bg.offset_right = 190
+	popup_bg.offset_bottom = 179
+	popup_bg.visible = false
+	add_child(popup_bg)
 
-	var style = StyleBoxFlat.new()
-	style.bg_color = Color(0.12, 0.14, 0.18, 0.95)
-	style.corner_radius_top_left = 20
-	style.corner_radius_top_right = 20
-	style.corner_radius_bottom_left = 20
-	style.corner_radius_bottom_right = 20
-	style.content_margin_left = 24
-	style.content_margin_right = 24
-	style.content_margin_top = 20
-	style.content_margin_bottom = 20
-	style.border_width_left = 2
-	style.border_width_right = 2
-	style.border_width_top = 2
-	style.border_width_bottom = 2
-	style.border_color = Color(0.3, 0.7, 0.9, 0.5)
-	panel.add_theme_stylebox_override("panel", style)
-	add_child(panel)
+	# ── Content container ──
+	# The popup.png has an ornate border (~12% each side). Pad inward.
+	var content = VBoxContainer.new()
+	content.anchor_left = 0.0
+	content.anchor_top = 0.0
+	content.anchor_right = 1.0
+	content.anchor_bottom = 1.0
+	content.offset_left = 45
+	content.offset_top = 55
+	content.offset_right = -45
+	content.offset_bottom = -35
+	content.alignment = BoxContainer.ALIGNMENT_CENTER
+	content.add_theme_constant_override("separation", 8)
+	popup_bg.add_child(content)
 
-	var vbox = VBoxContainer.new()
-	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	vbox.add_theme_constant_override("separation", 10)
-	panel.add_child(vbox)
-
-	# Icon
+	# ── Icon ──
 	icon_label = Label.new()
 	icon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	icon_label.add_theme_font_size_override("font_size", 48)
-	vbox.add_child(icon_label)
+	icon_label.add_theme_font_size_override("font_size", 36)
+	content.add_child(icon_label)
 
-	# Title
+	# ── Title ──
 	title_label = Label.new()
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title_label.add_theme_font_size_override("font_size", 22)
+	title_label.add_theme_font_size_override("font_size", 20)
 	title_label.add_theme_color_override("font_color", Color.WHITE)
-	vbox.add_child(title_label)
+	content.add_child(title_label)
 
-	# Description
+	# ── Description ──
 	desc_label = Label.new()
 	desc_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	desc_label.add_theme_font_size_override("font_size", 14)
-	desc_label.add_theme_color_override("font_color", Color(0.7, 0.75, 0.8))
+	desc_label.add_theme_color_override("font_color", Color(0.82, 0.85, 0.89))
 	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	vbox.add_child(desc_label)
+	content.add_child(desc_label)
 
-	# Spacer
 	var spacer = Control.new()
 	spacer.custom_minimum_size = Vector2(0, 6)
-	vbox.add_child(spacer)
+	content.add_child(spacer)
 
-	# Buttons row
+	# ── Buttons row (wrapped in CenterContainer to prevent stretch) ──
+	var btn_center = CenterContainer.new()
+	btn_center.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	content.add_child(btn_center)
+
 	var btn_row = HBoxContainer.new()
 	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	btn_row.add_theme_constant_override("separation", 12)
-	vbox.add_child(btn_row)
+	btn_row.add_theme_constant_override("separation", 20)
+	btn_center.add_child(btn_row)
 
-	play_btn = Button.new()
-	play_btn.text = "▶  Let's Play!"
-	play_btn.custom_minimum_size = Vector2(140, 44)
-	var play_style = StyleBoxFlat.new()
-	play_style.bg_color = Color(0.18, 0.77, 0.71)
-	play_style.corner_radius_top_left = 12
-	play_style.corner_radius_top_right = 12
-	play_style.corner_radius_bottom_left = 12
-	play_style.corner_radius_bottom_right = 12
-	play_btn.add_theme_stylebox_override("normal", play_style)
-	var play_hover = play_style.duplicate()
-	play_hover.bg_color = Color(0.22, 0.85, 0.78)
-	play_btn.add_theme_stylebox_override("hover", play_hover)
-	play_btn.add_theme_color_override("font_color", Color.WHITE)
-	play_btn.add_theme_font_size_override("font_size", 15)
-	play_btn.pressed.connect(_on_play_pressed)
-	btn_row.add_child(play_btn)
+	# ── OPEN button: open.png 1239x741 (1.67:1) → 120x72 ──
+	open_btn = TextureButton.new()
+	var open_tex = load("res://decorations/open.png")
+	open_btn.texture_normal = open_tex
+	open_btn.ignore_texture_size = true
+	open_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	open_btn.custom_minimum_size = Vector2(120, 72)
+	open_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	open_btn.pressed.connect(_on_play_pressed)
+	btn_row.add_child(open_btn)
 
-	close_btn = Button.new()
-	close_btn.text = "✕  Not Now"
-	close_btn.custom_minimum_size = Vector2(120, 44)
-	var close_style = StyleBoxFlat.new()
-	close_style.bg_color = Color(0.25, 0.27, 0.32)
-	close_style.corner_radius_top_left = 12
-	close_style.corner_radius_top_right = 12
-	close_style.corner_radius_bottom_left = 12
-	close_style.corner_radius_bottom_right = 12
-	close_btn.add_theme_stylebox_override("normal", close_style)
-	var close_hover = close_style.duplicate()
-	close_hover.bg_color = Color(0.35, 0.37, 0.42)
-	close_btn.add_theme_stylebox_override("hover", close_hover)
-	close_btn.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
-	close_btn.add_theme_font_size_override("font_size", 14)
+	# ── CLOSE button: close.png 1275x733 (1.74:1) → 120x69 ──
+	close_btn = TextureButton.new()
+	var close_tex = load("res://decorations/close.png")
+	close_btn.texture_normal = close_tex
+	close_btn.ignore_texture_size = true
+	close_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	close_btn.custom_minimum_size = Vector2(120, 69)
+	close_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	close_btn.pressed.connect(_on_close_pressed)
 	btn_row.add_child(close_btn)
 
-	# ── "Mission Complete!" panel ──
-	done_panel = PanelContainer.new()
-	done_panel.custom_minimum_size = Vector2(300, 120)
-	done_panel.anchor_left = 0.5
-	done_panel.anchor_top = 0.5
-	done_panel.anchor_right = 0.5
-	done_panel.anchor_bottom = 0.5
-	done_panel.offset_left = -150
-	done_panel.offset_top = -60
-	done_panel.offset_right = 150
-	done_panel.offset_bottom = 60
-	done_panel.visible = false
-	var done_style = StyleBoxFlat.new()
-	done_style.bg_color = Color(0.1, 0.55, 0.35, 0.95)
-	done_style.corner_radius_top_left = 18
-	done_style.corner_radius_top_right = 18
-	done_style.corner_radius_bottom_left = 18
-	done_style.corner_radius_bottom_right = 18
-	done_panel.add_theme_stylebox_override("panel", done_style)
-	add_child(done_panel)
-
-	done_label = Label.new()
-	done_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	done_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	done_label.add_theme_font_size_override("font_size", 24)
-	done_label.add_theme_color_override("font_color", Color.WHITE)
-	done_panel.add_child(done_label)
-
-	# ── Connect to GameManager signals ──
 	GameManager.mission_interact.connect(_on_mission_interact)
-	GameManager.mission_completed.connect(_on_mission_completed)
 
 func _on_mission_interact(data: Dictionary) -> void:
 	current_mission = data
@@ -170,40 +144,33 @@ func _on_mission_interact(data: Dictionary) -> void:
 	title_label.text = data.get("name", "Mission")
 	desc_label.text = data.get("desc", "Complete this mission!")
 	overlay.visible = true
-	panel.visible = true
+	popup_bg.visible = true
 
 func _on_close_pressed() -> void:
 	overlay.visible = false
-	panel.visible = false
+	popup_bg.visible = false
 	current_mission = {}
 	GameManager.cancel_interact()
 
 func _on_play_pressed() -> void:
-	# Hide the popup — in a real build this would open the actual mini-game scene.
-	# For the hackathon demo we simulate a short "playing" delay then mark complete.
 	overlay.visible = false
-	panel.visible = false
+	popup_bg.visible = false
 
-	# ──────────────────────────────────────────────
-	# OPTION A (quick demo): simulate playing and auto-complete after 2 seconds
-	# OPTION B (real): change scene to a mini-game scene, then call GameManager.complete()
-	# We ship Option A so the demo works out of the box.
-	# ──────────────────────────────────────────────
-	var id = current_mission.get("id", "")
-	await get_tree().create_timer(0.3).timeout  # tiny pause
-	_show_complete_banner(current_mission.get("name", "Mission"))
-	GameManager.complete(id)
+	var mission_id: String = current_mission.get("id", "")
+	var game_script = GAME_MAP.get(mission_id, LetterFlipGame)
 
-func _on_mission_completed(_id: String) -> void:
-	# Play SFX if present
+	active_game_node = CanvasLayer.new()
+	active_game_node.set_script(game_script)
+	get_tree().root.add_child(active_game_node)
+	active_game_node.game_finished.connect(_on_game_finished.bind(mission_id))
+
+func _on_game_finished(game_score: int, mission_id: String) -> void:
+	if active_game_node and is_instance_valid(active_game_node):
+		active_game_node.queue_free()
+		active_game_node = null
+
+	GameManager.complete(mission_id)
+
 	var sfx = get_node_or_null("SFX")
 	if sfx and sfx is AudioStreamPlayer and sfx.stream:
 		sfx.play()
-
-func _show_complete_banner(mission_name: String) -> void:
-	done_label.text = "✅  " + mission_name + " Complete!\n+10 ⭐"
-	done_panel.visible = true
-	overlay.visible = true
-	await get_tree().create_timer(1.8).timeout
-	done_panel.visible = false
-	overlay.visible = false

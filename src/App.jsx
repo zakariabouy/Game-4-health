@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { AppButton, StatusChip, EmptyState } from "./components/ui";
+import voiceService from "./services/voiceService";
 
 // ════════════════════════════════════════
 // PILLHERO v2 — Game4Health Hackathon
@@ -370,7 +371,7 @@ function GameLetterFlip({ onDone }) {
   if (done) return (
     <div className="game-done">
       <Confetti active={true} />
-      <div className="gd-emoji">{score > 60 ? "🏆" : score > 30 ? "⭐" : "💪"}</div>
+      <img src="/star.png" className="win-star" alt="Victory star" />
       <h2>Game Over!</h2>
       <div className="gd-score">{score} pts</div>
       <p>{score > 60 ? "You're a letter LEGEND!" : score > 30 ? "Great work! Keep going!" : "Nice try! Practice makes perfect!"}</p>
@@ -453,7 +454,7 @@ function GameWordBuilder({ onDone }) {
   if (done) return (
     <div className="game-done">
       <Confetti active={true} />
-      <div className="gd-emoji">{score > 80 ? "🏆" : "⭐"}</div>
+      <img src="/star.png" className="win-star" alt="Victory star" />
       <h2>Words Built!</h2>
       <div className="gd-score">{score} pts</div>
     </div>
@@ -547,7 +548,7 @@ function GameBreathBubble({ onDone }) {
   if (done) return (
     <div className="game-done">
       <Confetti active={true} />
-      <div className="gd-emoji">{score > 80 ? "🧘" : "🌿"}</div>
+      <img src="/star.png" className="win-star" alt="Victory star" />
       <h2>Calm Achieved!</h2>
       <div className="gd-score">{score} pts</div>
       <p>Great breathing! Your body feels so relaxed now.</p>
@@ -665,7 +666,7 @@ function GameFocusSprint({ onDone }) {
   if (done) return (
     <div className="game-done">
       <Confetti active={true} />
-      <div className="gd-emoji">{score > 100 ? "🏆" : score > 50 ? "🎯" : "⚡"}</div>
+      <img src="/star.png" className="win-star" alt="Victory star" />
       <h2>Focus Complete!</h2>
       <div className="gd-score">{score} pts</div>
       <p>{score > 100 ? "Lightning fast reflexes!" : "Great focus practice!"}</p>
@@ -743,7 +744,7 @@ function GameEmotionMatch({ onDone }) {
   if (done) return (
     <div className="game-done">
       <Confetti active={true} />
-      <div className="gd-emoji">{score > 80 ? "🧩" : "🙂"}</div>
+      <img src="/star.png" className="win-star" alt="Victory star" />
       <h2>Emotions Mastered!</h2>
       <div className="gd-score">{score} pts</div>
       <p>{score > 80 ? "You really understand feelings!" : "Great job recognizing emotions!"}</p>
@@ -835,7 +836,7 @@ function GameRoutineBuilder({ onDone }) {
   if (done) return (
     <div className="game-done">
       <Confetti active={true} />
-      <div className="gd-emoji">{score > 60 ? "🗓️" : "📋"}</div>
+      <img src="/star.png" className="win-star" alt="Victory star" />
       <h2>Routines Nailed!</h2>
       <div className="gd-score">{score} pts</div>
       <p>You know exactly what to do and when!</p>
@@ -908,6 +909,9 @@ function GameScreen({ game, onBack, onScore }) {
   const handleDone = (pts) => {
     setFinalScore(pts);
     onScore(pts);
+    // Voice feedback on game completion
+    const trigger = pts > 60 ? "game_win_high" : "game_win_normal";
+    voiceService.speak(trigger, { score: pts }, "high");
   };
 
   if (finalScore !== null) {
@@ -937,7 +941,7 @@ function GameScreen({ game, onBack, onScore }) {
           <p className="gsi-desc">{game.desc}</p>
           <div className="gsi-diff" data-diff={game.diff}>{game.diff}</div>
           {game.best > 0 && <p className="gsi-best">Your best: ⭐ {game.best}</p>}
-          <AppButton className="btn-go" onClick={() => setStarted(true)}>
+          <AppButton className="btn-go" onClick={() => { setStarted(true); voiceService.speak("game_start", {}, "high"); }}>
             <span>Let's Go!</span>
             <span className="btn-go-arrow">→</span>
           </AppButton>
@@ -1030,32 +1034,9 @@ function ChildApp({ s, set, logout, dyslexiaMode, onToggleDyslexiaMode }) {
   const [heroBounce, setHeroBounce] = useState(false);
   const [confetti, setConfetti] = useState(false);
   const [popup, setPopup] = useState(null);
-  const [voiceEnabled, setVoiceEnabled] = useState(() => {
-    if (typeof window === "undefined") return true;
-    try {
-      const raw = window.localStorage.getItem("pillhero.voice.enabled");
-      return raw ? JSON.parse(raw) : true;
-    } catch {
-      return true;
-    }
-  });
-  const [autoReminders, setAutoReminders] = useState(() => {
-    if (typeof window === "undefined") return true;
-    try {
-      const raw = window.localStorage.getItem("pillhero.voice.auto");
-      return raw ? JSON.parse(raw) : true;
-    } catch {
-      return true;
-    }
-  });
-  const [coachStyle, setCoachStyle] = useState(() => {
-    if (typeof window === "undefined") return "gentle";
-    try {
-      return window.localStorage.getItem("pillhero.voice.style") || "gentle";
-    } catch {
-      return "gentle";
-    }
-  });
+  const [voiceEnabled, setVoiceEnabled] = useState(() => voiceService.getEnabled());
+  const [autoReminders, setAutoReminders] = useState(() => voiceService.getAutoReminders());
+  const [coachStyle, setCoachStyle] = useState(() => voiceService.getStyle());
   const [voiceReady, setVoiceReady] = useState(false);
   const lastSpokenPillRef = useRef(null);
 
@@ -1072,79 +1053,29 @@ function ChildApp({ s, set, logout, dyslexiaMode, onToggleDyslexiaMode }) {
   const therapyGateMet = s.assignedGames.length === 0 ? true : weeklyGameSessions >= Math.min(2, weeklyTarget);
   const rewardGateMet = medicineGateMet && therapyGateMet;
 
-  const speakLine = useCallback((line, priority = "normal") => {
-    if (!voiceEnabled || !line || typeof window === "undefined") return;
-    if (!("speechSynthesis" in window)) return;
-    const synth = window.speechSynthesis;
-
-    if (priority === "high") synth.cancel();
-
-    const utter = new SpeechSynthesisUtterance(line);
-    utter.lang = "en-US";
-    utter.rate = coachStyle === "energetic" ? 1.02 : 0.92;
-    utter.pitch = coachStyle === "energetic" ? 1.2 : 1.05;
-    utter.volume = 1;
-
-    const voices = synth.getVoices();
-    const preferred =
-      voices.find((v) => /en(-|_)us/i.test(v.lang) && /female|zira|samantha|aria|jenny|ava/i.test(v.name)) ||
-      voices.find((v) => /en/i.test(v.lang));
-    if (preferred) utter.voice = preferred;
-
-    synth.speak(utter);
-  }, [coachStyle, voiceEnabled]);
-
+  // ── Voice service integration ──
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const supported = "speechSynthesis" in window;
-    setVoiceReady(supported);
-    if (!supported) return;
-
-    const synth = window.speechSynthesis;
-    const markReady = () => setVoiceReady(true);
-    markReady();
-
-    if (typeof synth.addEventListener === "function") {
-      synth.addEventListener("voiceschanged", markReady);
-      return () => {
-        synth.removeEventListener("voiceschanged", markReady);
-        synth.cancel();
-      };
-    }
-
-    synth.onvoiceschanged = markReady;
-    return () => {
-      synth.onvoiceschanged = null;
-      synth.cancel();
-    };
+    voiceService.init();
+    setVoiceReady(voiceService.isReady());
+    return () => voiceService.cleanup();
   }, []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      window.localStorage.setItem("pillhero.voice.enabled", JSON.stringify(voiceEnabled));
-      window.localStorage.setItem("pillhero.voice.auto", JSON.stringify(autoReminders));
-      window.localStorage.setItem("pillhero.voice.style", coachStyle);
-    } catch {
-      // Ignore storage errors in private browsing or restricted environments.
-    }
+    voiceService.setEnabled(voiceEnabled);
+    voiceService.setAutoReminders(autoReminders);
+    voiceService.setStyle(coachStyle);
   }, [voiceEnabled, autoReminders, coachStyle]);
 
   useEffect(() => {
-    if (!nextPill) {
-      lastSpokenPillRef.current = null;
-      return;
-    }
+    if (!nextPill) { lastSpokenPillRef.current = null; return; }
     if (!autoReminders || !voiceEnabled) return;
     if (lastSpokenPillRef.current === nextPill.id) return;
-
     lastSpokenPillRef.current = nextPill.id;
-    const text = coachStyle === "energetic"
-      ? `Hero mission time. Let's take ${nextPill.name} now and level up!`
-      : `Hi ${s.childName}. It's time for ${nextPill.name}. Let's take the pills together.`;
-    const timer = setTimeout(() => speakLine(text, "high"), 500);
+    const timer = setTimeout(() => {
+      voiceService.speak("pill_reminder", { childName: s.childName, pillName: nextPill.name }, "high");
+    }, 500);
     return () => clearTimeout(timer);
-  }, [autoReminders, coachStyle, nextPill, s.childName, speakLine, voiceEnabled]);
+  }, [autoReminders, nextPill, s.childName, voiceEnabled]);
 
   const takePill = (id) => {
     setHeroBounce(true);
@@ -1165,9 +1096,9 @@ function ChildApp({ s, set, logout, dyslexiaMode, onToggleDyslexiaMode }) {
       log: [{ text: `Took ${pill.name} (awaiting parent confirmation)`, time: "Just now", pts: 0, type: "pending" }, ...prev.log],
       achievements: allDone ? prev.achievements.map(a => a.id === "a4" ? { ...a, unlocked: true } : a) : prev.achievements,
     }));
-    speakLine(`Amazing job. ${pill.name} done. Your hero got stronger!`, "high");
+    voiceService.speak("pill_taken", { childName: s.childName, pillName: pill.name }, "high");
     if (allDone) {
-      speakLine("Perfect medicine day. You unlocked a hero power boost!", "high");
+      voiceService.speak("all_pills_done", { childName: s.childName }, "high");
     }
     setTimeout(() => setHeroBounce(false), 1200);
     setTimeout(() => setConfetti(false), 3000);
@@ -1293,10 +1224,11 @@ function ChildApp({ s, set, logout, dyslexiaMode, onToggleDyslexiaMode }) {
                   size="sm"
                   variant="accent"
                   onClick={() => {
-                    const line = nextPill
-                      ? `Let's take ${nextPill.name} now. You are doing amazing.`
-                      : "Great job. You completed all medicine missions for today.";
-                    speakLine(line, "high");
+                    voiceService.speak(
+                      nextPill ? "pill_reminder" : "greeting",
+                      { childName: s.childName, pillName: nextPill?.name || "" },
+                      "high"
+                    );
                   }}
                   disabled={!voiceEnabled || !voiceReady}
                 >
@@ -2424,6 +2356,9 @@ button:focus-visible{
 .gi-fb.wrong{background:#FFF0F0;color:#E74C3C}
 .game-done{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;position:relative}
 .gd-emoji{font-size:72px;animation:popIn .5s ease}
+.win-star{width:120px;height:120px;object-fit:contain;image-rendering:pixelated;animation:starBounce .8s cubic-bezier(.34,1.56,.64,1),starGlow 2s ease-in-out infinite;filter:drop-shadow(0 0 12px rgba(212,160,23,0.6))}
+@keyframes starBounce{0%{transform:scale(0) rotate(-30deg);opacity:0}50%{transform:scale(1.3) rotate(10deg);opacity:1}100%{transform:scale(1) rotate(0deg)}}
+@keyframes starGlow{0%,100%{filter:drop-shadow(0 0 12px rgba(212,160,23,0.6))}50%{filter:drop-shadow(0 0 24px rgba(255,217,61,0.9))}}
 .game-done h2{font-size:30px;margin:8px 0}
 .gd-score{font-family:'Baloo 2',cursive;font-size:42px;color:#D4A017}
 .game-done p{color:#666;margin-top:4px}

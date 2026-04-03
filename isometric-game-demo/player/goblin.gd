@@ -29,12 +29,19 @@ var anim_directions = {
 	],
 }
 
+const GoblinSpeechScript = preload("res://goblin_speech.gd")
+
+var speech_bubble: Node2D = null
 
 func _ready() -> void:
 	# Listen for freeze/unfreeze from the mission system
 	if Engine.has_singleton("GameManager") or has_node("/root/GameManager"):
 		GameManager.player_freeze.connect(_on_freeze)
 
+	# ── Attach speech bubble system ──
+	speech_bubble = Node2D.new()
+	speech_bubble.set_script(GoblinSpeechScript)
+	add_child(speech_bubble)
 
 func _on_freeze(is_frozen: bool) -> void:
 	frozen = is_frozen
