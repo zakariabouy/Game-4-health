@@ -230,9 +230,13 @@ function Hero({ hp, maxHP, size = 200, bounce = false, skin = "knight" }) {
   const tone = skinMap[skin] || skinMap.knight;
   const hpGlow = r > 0.75 ? "#6BCB77" : r > 0.45 ? "#FFD93D" : "#FF8A65";
 
+  const heroScale = 0.5 + r * 0.5;
+  const droopY = r < 0.25 ? 4 : r < 0.5 ? 2 : 0;
+  const heroOpacity = Math.max(0.5, 0.4 + r * 0.6);
+
   return (
     <div className={`hero-wrap hero-pixel ${bounce ? "hero-mega-bounce" : ""}`} style={{ width: size, height: size }}>
-      <svg viewBox="0 0 96 96" width={size} height={size} shapeRendering="crispEdges">
+      <svg viewBox="0 0 96 96" width={size} height={size} shapeRendering="crispEdges" style={{ transform: `scale(${heroScale}) translateY(${droopY}px)`, opacity: heroOpacity, transition: "transform 0.8s ease, opacity 0.8s ease" }}>
         <defs>
           <filter id="pixelStickerStrong">
             <feMorphology operator="dilate" radius="1.8" in="SourceAlpha" result="outline" />
@@ -306,6 +310,14 @@ function Hero({ hp, maxHP, size = 200, bounce = false, skin = "knight" }) {
           )}
         </g>
 
+        {r < 0.25 && (
+          <>
+            <rect x="38" y="34" width="2" height="2" fill="#95A5A6" className="sparkle-float" style={{ animationDelay: "0s" }} />
+            <rect x="56" y="34" width="2" height="2" fill="#95A5A6" className="sparkle-float" style={{ animationDelay: "0.5s" }} />
+            <text x="48" y="90" textAnchor="middle" fontSize="6" fill="#BDC3C7" fontWeight="800">zzz</text>
+          </>
+        )}
+
         {r > 0.55 && (
           <>
             <rect x="16" y="18" width="3" height="3" fill={hpGlow} className="sparkle-float" style={{ animationDelay: "0s" }} />
@@ -315,6 +327,7 @@ function Hero({ hp, maxHP, size = 200, bounce = false, skin = "knight" }) {
           </>
         )}
       </svg>
+      {r > 0.75 && <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: `radial-gradient(circle, ${hpGlow}22 0%, transparent 70%)`, pointerEvents: "none", animation: "sparkle 3s ease-in-out infinite" }} />}
     </div>
   );
 }
@@ -473,8 +486,421 @@ function GameWordBuilder({ onDone }) {
 }
 
 // ════════════════════════════════════════
+// MINI-GAME: Breath Bubble (Anxiety)
+// ════════════════════════════════════════
+function GameBreathBubble({ onDone }) {
+  const [phase, setPhase] = useState("inhale");
+  const [round, setRound] = useState(0);
+  const [score, setScore] = useState(0);
+  const [size, setSize] = useState(60);
+  const [target, setTarget] = useState(140);
+  const [holding, setHolding] = useState(false);
+  const [fb, setFb] = useState(null);
+  const [done, setDone] = useState(false);
+  const total = 6;
+  const growRef = useRef(null);
+  const phaseRef = useRef(phase);
+  phaseRef.current = phase;
+
+  const patterns = useRef([
+    { label: "Breathe In slowly...", dir: "grow", target: 150 },
+    { label: "Breathe Out gently...", dir: "shrink", target: 60 },
+    { label: "Big breath In!", dir: "grow", target: 160 },
+    { label: "Slow breath Out...", dir: "shrink", target: 50 },
+    { label: "Deep breath In...", dir: "grow", target: 155 },
+    { label: "Let it all Out...", dir: "shrink", target: 55 },
+  ]).current;
+
+  useEffect(() => {
+    setTarget(patterns[round]?.target || 140);
+    setPhase(patterns[round]?.dir === "grow" ? "inhale" : "exhale");
+  }, [round, patterns]);
+
+  const onPointerDown = () => {
+    if (fb || done) return;
+    setHolding(true);
+    growRef.current = setInterval(() => {
+      setSize(s => {
+        const dir = phaseRef.current === "inhale" ? 1.8 : -1.8;
+        return Math.max(30, Math.min(180, s + dir));
+      });
+    }, 30);
+  };
+
+  const onPointerUp = () => {
+    if (!holding || fb || done) return;
+    setHolding(false);
+    clearInterval(growRef.current);
+    const diff = Math.abs(size - target);
+    const pts = diff < 15 ? 20 : diff < 30 ? 12 : 5;
+    setScore(s => s + pts);
+    setFb(diff < 15 ? "perfect" : diff < 30 ? "good" : "ok");
+    setTimeout(() => {
+      setFb(null);
+      if (round + 1 >= total) { setDone(true); onDone(score + pts); }
+      else { setRound(r => r + 1); setSize(patterns[round]?.dir === "grow" ? 60 : 150); }
+    }, 800);
+  };
+
+  useEffect(() => () => clearInterval(growRef.current), []);
+
+  if (done) return (
+    <div className="game-done">
+      <Confetti active={true} />
+      <div className="gd-emoji">{score > 80 ? "🧘" : "🌿"}</div>
+      <h2>Calm Achieved!</h2>
+      <div className="gd-score">{score} pts</div>
+      <p>Great breathing! Your body feels so relaxed now.</p>
+    </div>
+  );
+
+  const p = patterns[round];
+  return (
+    <div className="game-inner" style={{ userSelect: "none" }}>
+      <div className="gi-progress">
+        {patterns.map((_, i) => <div key={i} className={`gi-dot ${i < round ? "gi-done" : i === round ? "gi-now" : ""}`} />)}
+      </div>
+      <span className="gi-score" style={{ display: "block", textAlign: "center", marginBottom: 8 }}>⭐ {score}</span>
+      <h2 className="gi-prompt">{p.label}</h2>
+      <p style={{ fontSize: 13, color: "#999", marginBottom: 16, textAlign: "center" }}>
+        {phase === "inhale" ? "Hold to grow the bubble" : "Hold to shrink the bubble"}
+      </p>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 200, position: "relative" }}>
+        <div style={{
+          width: size, height: size, borderRadius: "50%", transition: holding ? "none" : "all 0.3s",
+          background: `radial-gradient(circle at 35% 35%, #89F7FE, #66A6FF)`,
+          boxShadow: `0 0 ${size / 3}px rgba(102,166,255,0.4)`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>
+          <span style={{ fontSize: 28, opacity: 0.7 }}>💨</span>
+        </div>
+        <div style={{
+          position: "absolute", width: target, height: target, borderRadius: "50%",
+          border: "3px dashed rgba(102,166,255,0.35)", pointerEvents: "none",
+        }} />
+      </div>
+      <button
+        onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerLeave={onPointerUp}
+        style={{
+          marginTop: 20, padding: "16px 48px", borderRadius: 18, border: "none", fontSize: 18, fontWeight: 800,
+          background: holding ? "linear-gradient(135deg,#66A6FF,#89F7FE)" : "linear-gradient(135deg,#89F7FE,#66A6FF)",
+          color: "white", cursor: "pointer", fontFamily: "var(--font-body)", transform: holding ? "scale(0.95)" : "scale(1)",
+          transition: "transform 0.15s",
+        }}>
+        {holding ? (phase === "inhale" ? "Breathing In..." : "Breathing Out...") : "Hold to Breathe"}
+      </button>
+      {fb && <div className={`gi-fb ${fb === "perfect" ? "right" : fb === "good" ? "right" : "wrong"}`}>
+        {fb === "perfect" ? "🌟 Perfect breath!" : fb === "good" ? "👍 Good job!" : "💪 Keep practicing!"}
+      </div>}
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+// MINI-GAME: Focus Sprint (ADHD)
+// ════════════════════════════════════════
+function GameFocusSprint({ onDone }) {
+  const [round, setRound] = useState(0);
+  const [score, setScore] = useState(0);
+  const [combo, setCombo] = useState(0);
+  const [fb, setFb] = useState(null);
+  const [done, setDone] = useState(false);
+  const [timer, setTimer] = useState(3.0);
+  const timerRef = useRef(null);
+  const total = 10;
+
+  const challenges = useRef(Array.from({ length: total }, () => {
+    const shapes = ["🔴", "🔵", "🟢", "🟡", "🟣", "🟠"];
+    const targetIdx = Math.floor(Math.random() * shapes.length);
+    const targetShape = shapes[targetIdx];
+    const gridSize = 9;
+    const correctPos = Math.floor(Math.random() * gridSize);
+    const grid = Array.from({ length: gridSize }, (_, i) => {
+      if (i === correctPos) return targetShape;
+      let s;
+      do { s = shapes[Math.floor(Math.random() * shapes.length)]; } while (s === targetShape);
+      return s;
+    });
+    return { target: targetShape, grid, correctPos };
+  })).current;
+
+  useEffect(() => {
+    if (done || fb) return;
+    setTimer(3.0);
+    timerRef.current = setInterval(() => {
+      setTimer(t => {
+        if (t <= 0.1) {
+          clearInterval(timerRef.current);
+          setFb("timeout");
+          setCombo(0);
+          setTimeout(() => {
+            setFb(null);
+            if (round + 1 >= total) { setDone(true); onDone(score); }
+            else setRound(r => r + 1);
+          }, 600);
+          return 0;
+        }
+        return Math.round((t - 0.1) * 10) / 10;
+      });
+    }, 100);
+    return () => clearInterval(timerRef.current);
+  }, [round, done, fb]);
+
+  const pick = (idx) => {
+    if (fb || done) return;
+    clearInterval(timerRef.current);
+    const ok = idx === challenges[round].correctPos;
+    const timeBonus = Math.round(timer * 5);
+    const pts = ok ? 10 + combo * 3 + timeBonus : 0;
+    setScore(s => s + pts);
+    setCombo(ok ? combo + 1 : 0);
+    setFb(ok ? "right" : "wrong");
+    setTimeout(() => {
+      setFb(null);
+      if (round + 1 >= total) { setDone(true); onDone(score + pts); }
+      else setRound(r => r + 1);
+    }, 500);
+  };
+
+  if (done) return (
+    <div className="game-done">
+      <Confetti active={true} />
+      <div className="gd-emoji">{score > 100 ? "🏆" : score > 50 ? "🎯" : "⚡"}</div>
+      <h2>Focus Complete!</h2>
+      <div className="gd-score">{score} pts</div>
+      <p>{score > 100 ? "Lightning fast reflexes!" : "Great focus practice!"}</p>
+    </div>
+  );
+
+  const c = challenges[round];
+  return (
+    <div className="game-inner">
+      <div className="gi-progress">
+        {challenges.map((_, i) => <div key={i} className={`gi-dot ${i < round ? "gi-done" : i === round ? "gi-now" : ""}`} />)}
+      </div>
+      <div className="gi-stats">
+        <span className="gi-score">⭐ {score}</span>
+        {combo > 1 && <span className="gi-combo">🔥 x{combo}</span>}
+      </div>
+      <h2 className="gi-prompt">Find the {c.target} quickly!</h2>
+      <div style={{ fontSize: 14, color: timer < 1 ? "#E74C3C" : "#999", fontWeight: 800, marginBottom: 12, textAlign: "center" }}>
+        ⏱️ {timer.toFixed(1)}s
+      </div>
+      <div style={{
+        display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, maxWidth: 280, width: "100%",
+      }}>
+        {c.grid.map((shape, i) => (
+          <button key={i} onClick={() => pick(i)} style={{
+            width: "100%", aspectRatio: "1", fontSize: 36, border: `3px solid ${fb === "right" && i === c.correctPos ? "#6BCB77" : fb === "wrong" && i === c.correctPos ? "#FFD93D" : "#e0e0e0"}`,
+            borderRadius: 16, background: fb === "right" && i === c.correctPos ? "#E8FFF0" : "white",
+            cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            {shape}
+          </button>
+        ))}
+      </div>
+      {fb && <div className={`gi-fb ${fb === "right" ? "right" : "wrong"}`}>
+        {fb === "right" ? "🎉 Found it!" : fb === "timeout" ? "⏰ Too slow!" : "❌ Wrong one!"}
+      </div>}
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+// MINI-GAME: Emotion Match (Autism)
+// ════════════════════════════════════════
+function GameEmotionMatch({ onDone }) {
+  const challenges = useRef([
+    { face: "😊", options: ["Happy", "Sad", "Angry"], answer: "Happy" },
+    { face: "😢", options: ["Excited", "Sad", "Bored"], answer: "Sad" },
+    { face: "😠", options: ["Happy", "Scared", "Angry"], answer: "Angry" },
+    { face: "😨", options: ["Scared", "Tired", "Happy"], answer: "Scared" },
+    { face: "😴", options: ["Angry", "Tired", "Sad"], answer: "Tired" },
+    { face: "🤩", options: ["Bored", "Excited", "Scared"], answer: "Excited" },
+    { face: "😕", options: ["Confused", "Happy", "Angry"], answer: "Confused" },
+    { face: "🥰", options: ["Loved", "Tired", "Scared"], answer: "Loved" },
+  ]).current;
+  const [round, setRound] = useState(0);
+  const [score, setScore] = useState(0);
+  const [combo, setCombo] = useState(0);
+  const [fb, setFb] = useState(null);
+  const [done, setDone] = useState(false);
+
+  const pick = (ans) => {
+    if (fb) return;
+    const ok = ans === challenges[round].answer;
+    const pts = ok ? 15 + combo * 5 : 0;
+    setScore(s => s + pts);
+    setCombo(ok ? combo + 1 : 0);
+    setFb(ok ? "right" : "wrong");
+    setTimeout(() => {
+      setFb(null);
+      if (round + 1 >= challenges.length) { setDone(true); onDone(score + pts); }
+      else setRound(r => r + 1);
+    }, 700);
+  };
+
+  if (done) return (
+    <div className="game-done">
+      <Confetti active={true} />
+      <div className="gd-emoji">{score > 80 ? "🧩" : "🙂"}</div>
+      <h2>Emotions Mastered!</h2>
+      <div className="gd-score">{score} pts</div>
+      <p>{score > 80 ? "You really understand feelings!" : "Great job recognizing emotions!"}</p>
+    </div>
+  );
+
+  const c = challenges[round];
+  return (
+    <div className="game-inner">
+      <div className="gi-progress">
+        {challenges.map((_, i) => <div key={i} className={`gi-dot ${i < round ? "gi-done" : i === round ? "gi-now" : ""}`} />)}
+      </div>
+      <div className="gi-stats">
+        <span className="gi-score">⭐ {score}</span>
+        {combo > 1 && <span className="gi-combo">🔥 x{combo}</span>}
+      </div>
+      <div style={{ fontSize: 80, textAlign: "center", margin: "12px 0 8px", animation: "popIn 0.3s ease" }}>{c.face}</div>
+      <h2 className="gi-prompt">How is this person feeling?</h2>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%", maxWidth: 300 }}>
+        {c.options.map(o => (
+          <button key={o} onClick={() => pick(o)} style={{
+            padding: "14px 20px", borderRadius: 16, fontSize: 17, fontWeight: 800,
+            border: `3px solid ${fb === "right" && o === c.answer ? "#6BCB77" : fb === "wrong" && o !== c.answer ? "#eee" : fb === "wrong" && o === c.answer ? "#FFD93D" : "#e0e0e0"}`,
+            background: fb === "right" && o === c.answer ? "#E8FFF0" : "white",
+            cursor: "pointer", fontFamily: "var(--font-body)", transition: "all 0.15s", color: "#2D3436",
+          }}>
+            {o}
+          </button>
+        ))}
+      </div>
+      {fb && <div className={`gi-fb ${fb}`}>{fb === "right" ? "🎉 That's right!" : `❌ It was: ${c.answer}`}</div>}
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+// MINI-GAME: Routine Builder (Autism)
+// ════════════════════════════════════════
+function GameRoutineBuilder({ onDone }) {
+  const puzzles = useRef([
+    { title: "Morning Routine", steps: ["Wake up", "Brush teeth", "Get dressed", "Eat breakfast", "Go to school"], icon: "🌅" },
+    { title: "Bedtime Routine", steps: ["Take a bath", "Put on pajamas", "Brush teeth", "Read a story", "Go to sleep"], icon: "🌙" },
+    { title: "Meal Time", steps: ["Wash hands", "Set the table", "Eat food", "Drink water", "Clean up"], icon: "🍽️" },
+    { title: "Going Outside", steps: ["Check weather", "Put on shoes", "Grab jacket", "Tell a parent", "Go outside"], icon: "🚪" },
+  ]).current;
+  const [round, setRound] = useState(0);
+  const [order, setOrder] = useState([]);
+  const [pool, setPool] = useState(() => [...puzzles[0].steps].sort(() => Math.random() - 0.5));
+  const [score, setScore] = useState(0);
+  const [fb, setFb] = useState(null);
+  const [done, setDone] = useState(false);
+
+  const pickStep = (step) => {
+    if (fb) return;
+    const nextIdx = order.length;
+    const correct = puzzles[round].steps[nextIdx];
+    const ok = step === correct;
+    const newOrder = [...order, step];
+    setOrder(newOrder);
+    setPool(pool.filter(s => s !== step));
+
+    if (!ok) {
+      setFb("wrong");
+      setTimeout(() => {
+        setFb(null);
+        setOrder([]);
+        setPool([...puzzles[round].steps].sort(() => Math.random() - 0.5));
+      }, 800);
+      return;
+    }
+
+    if (newOrder.length === puzzles[round].steps.length) {
+      const pts = 25;
+      setScore(s => s + pts);
+      setFb("right");
+      setTimeout(() => {
+        setFb(null);
+        if (round + 1 >= puzzles.length) { setDone(true); onDone(score + pts); }
+        else {
+          const next = round + 1;
+          setRound(next);
+          setOrder([]);
+          setPool([...puzzles[next].steps].sort(() => Math.random() - 0.5));
+        }
+      }, 900);
+    }
+  };
+
+  if (done) return (
+    <div className="game-done">
+      <Confetti active={true} />
+      <div className="gd-emoji">{score > 60 ? "🗓️" : "📋"}</div>
+      <h2>Routines Nailed!</h2>
+      <div className="gd-score">{score} pts</div>
+      <p>You know exactly what to do and when!</p>
+    </div>
+  );
+
+  const p = puzzles[round];
+  return (
+    <div className="game-inner">
+      <div className="gi-progress">
+        {puzzles.map((_, i) => <div key={i} className={`gi-dot ${i < round ? "gi-done" : i === round ? "gi-now" : ""}`} />)}
+      </div>
+      <span className="gi-score" style={{ display: "block", textAlign: "center", marginBottom: 8 }}>⭐ {score}</span>
+      <div style={{ fontSize: 40, textAlign: "center" }}>{p.icon}</div>
+      <h2 className="gi-prompt">{p.title}</h2>
+      <p style={{ fontSize: 13, color: "#999", marginBottom: 12, textAlign: "center" }}>Tap the steps in the right order!</p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 6, width: "100%", maxWidth: 320, marginBottom: 16 }}>
+        {p.steps.map((_, i) => (
+          <div key={i} style={{
+            padding: "10px 14px", borderRadius: 12, fontSize: 14, fontWeight: 700,
+            border: `2px solid ${order[i] ? "#6BCB77" : "#e8e8e8"}`,
+            background: order[i] ? "#E8FFF0" : "#FAFAFA", color: order[i] ? "#27AE60" : "#ccc",
+            display: "flex", alignItems: "center", gap: 8,
+          }}>
+            <span style={{ width: 24, height: 24, borderRadius: "50%", background: order[i] ? "#6BCB77" : "#e0e0e0", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 800, flexShrink: 0 }}>
+              {i + 1}
+            </span>
+            {order[i] || "..."}
+          </div>
+        ))}
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%", maxWidth: 320 }}>
+        {pool.map(step => (
+          <button key={step} onClick={() => pickStep(step)} style={{
+            padding: "12px 16px", borderRadius: 14, fontSize: 15, fontWeight: 700,
+            border: "2px solid #74B9FF", background: "linear-gradient(135deg,#F0F7FF,#FFFFFF)",
+            cursor: "pointer", fontFamily: "var(--font-body)", transition: "all 0.15s", color: "#2D3436",
+          }}>
+            {step}
+          </button>
+        ))}
+      </div>
+      {fb && <div className={`gi-fb ${fb}`} style={{ marginTop: 12 }}>
+        {fb === "right" ? "🎉 Perfect order!" : "❌ Wrong step! Try again from the start."}
+      </div>}
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
 // GAME WRAPPER
 // ════════════════════════════════════════
+function renderGameEngine(gameId, cat, onDone) {
+  if (gameId === "g1" || gameId === "g6") return <GameLetterFlip onDone={onDone} />;
+  if (gameId === "g2" || gameId === "g3") return <GameWordBuilder onDone={onDone} />;
+  if (cat === "anxiety") return <GameBreathBubble onDone={onDone} />;
+  if (cat === "adhd") return <GameFocusSprint onDone={onDone} />;
+  if (cat === "autism" && (gameId === "u2" || gameId === "u4")) return <GameEmotionMatch onDone={onDone} />;
+  if (cat === "autism") return <GameRoutineBuilder onDone={onDone} />;
+  if (cat === "medication") return <GameFocusSprint onDone={onDone} />;
+  return <GameLetterFlip onDone={onDone} />;
+}
+
 function GameScreen({ game, onBack, onScore }) {
   const [started, setStarted] = useState(false);
   const [finalScore, setFinalScore] = useState(null);
@@ -492,9 +918,7 @@ function GameScreen({ game, onBack, onScore }) {
           <span className="gs-title">{game.name}</span>
           <span />
         </div>
-        {game.id === "g1" || game.id === "g6" ? <GameLetterFlip onDone={handleDone} /> :
-          game.id === "g2" || game.id === "g3" ? <GameWordBuilder onDone={handleDone} /> :
-            <GameLetterFlip onDone={handleDone} />}
+        {renderGameEngine(game.id, game.cat, handleDone)}
       </div>
     );
   }
@@ -529,8 +953,7 @@ function GameScreen({ game, onBack, onScore }) {
         <span className="gs-title">{game.name}</span>
         <span />
       </div>
-      {game.id === "g1" || game.id === "g6" ? <GameLetterFlip onDone={handleDone} /> :
-        <GameWordBuilder onDone={handleDone} />}
+      {renderGameEngine(game.id, game.cat, handleDone)}
     </div>
   );
 }
@@ -1542,10 +1965,26 @@ function Landing({ onRole }) {
 // ════════════════════════════════════════
 // MAIN APP
 // ════════════════════════════════════════
+const STORAGE_KEY = "pillhero.save";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) { const parsed = JSON.parse(raw); return { ...INIT, ...parsed }; }
+  } catch { /* ignore */ }
+  return INIT;
+}
+
+function saveState(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch { /* ignore */ }
+}
+
 export default function App() {
   const [role, setRole] = useState(null);
-  const [s, set] = useState(INIT);
+  const [s, set] = useState(loadState);
   const [dyslexiaMode, setDyslexiaMode] = useState(false);
+
+  useEffect(() => { saveState(s); }, [s]);
 
   return (
     <>
