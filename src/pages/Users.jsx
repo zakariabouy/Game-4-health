@@ -1,277 +1,196 @@
-import { useState } from 'react';
-import { BarChart, Bar, AreaChart, Area, ResponsiveContainer } from 'recharts';
-import { Search, SlidersHorizontal, MoreVertical, Users as UsersIcon, Zap, Flame, BookOpen, Star, Leaf, Pill, TreePine, Award } from 'lucide-react';
-import {
-  users, popularGames, avatarColors, miniBarData, miniLineData,
-  getHeroStage,
-} from '../data/mockData';
+import { Zap, Pill, BookOpen, Star, Leaf, TreePine, CheckCircle, XCircle, Calendar, User, Activity } from 'lucide-react';
+import { childProfile, childMedications, assignedPacks, sessionHistory } from '../data/mockData';
 
-// ── Pack icon lookup ─────────────────────────────────────────────────────
 const PACK_ICONS = { BookOpen, Zap, Star, Leaf, Pill, TreePine };
-function PackIcon({ name, size = 20, color = '#fff' }) {
+function PackIcon({ name, size = 18, color = '#fff' }) {
   const Icon = PACK_ICONS[name] || Pill;
   return <Icon size={size} color={color} />;
 }
 
-// ── Condition class helper ───────────────────────────────────────────────
-function condClass(c) {
-  const m = { ADHD:'cond-adhd', Dyslexia:'cond-dyslexia', Autism:'cond-autism', Anxiety:'cond-anxiety' };
-  return m[c] || 'cond-med';
-}
-
-// ── HP bar ───────────────────────────────────────────────────────────────
-function HpBar({ hp }) {
-  const cls = hp >= 70 ? 'bar-fill-hp-hi' : hp >= 40 ? 'bar-fill-hp-mid' : 'bar-fill-hp-low';
-  return (
-    <div style={{ minWidth: 70 }}>
-      <div className="bar-track">
-        <div className={`bar-fill ${cls}`} style={{ width: `${hp}%` }} />
-      </div>
-      <div style={{ textAlign: 'right', marginTop: 2 }}>
-        <span style={{ fontFamily: "'Press Start 2P',monospace", fontSize: 7, color: '#6060a0' }}>
-          {hp}/100
-        </span>
-      </div>
-    </div>
-  );
-}
-
-// ── Speedometer gauge SVG ────────────────────────────────────────────────
-function Gauge({ pct = 0.7, size = 110 }) {
-  const r = 38, cx = size / 2, cy = size * 0.72;
-  const toXY = a => ({ x: cx + r * Math.cos(a), y: cy - r * Math.sin(a) });
-  const bgStart = toXY(Math.PI), bgEnd = toXY(0);
-  const angle = Math.PI * (1 - pct);
-  const fillEnd = toXY(angle);
-  const tip = { x: cx + (r - 9) * Math.cos(angle), y: cy - (r - 9) * Math.sin(angle) };
-  const ticks = Array.from({ length: 7 }, (_, i) => {
-    const a = Math.PI - (i / 6) * Math.PI;
-    return { x1: cx+(r+2)*Math.cos(a), y1: cy-(r+2)*Math.sin(a), x2: cx+(r+7)*Math.cos(a), y2: cy-(r+7)*Math.sin(a) };
-  });
-  const bgArc   = `M ${bgStart.x} ${bgStart.y} A ${r} ${r} 0 0 1 ${bgEnd.x} ${bgEnd.y}`;
-  const fillArc = `M ${bgStart.x} ${bgStart.y} A ${r} ${r} 0 ${pct > 0.5 ? 1 : 0} 1 ${fillEnd.x} ${fillEnd.y}`;
-  return (
-    <svg width={size} height={cy + 12} style={{ display: 'block', margin: '0 auto' }}>
-      <path d={bgArc} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
-      {ticks.map((t, i) => (
-        <line key={i} x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2}
-          stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
-      ))}
-      {pct > 0 && <path d={fillArc} fill="none" stroke="#a78bfa" strokeWidth="5" />}
-      <line x1={cx} y1={cy} x2={tip.x} y2={tip.y} stroke="#fff" strokeWidth="2" />
-      {/* pixel dot at centre */}
-      <rect x={cx-4} y={cy-4} width={8} height={8} fill="#7c3aed" />
-    </svg>
-  );
-}
-
-// ── Stat Cards ───────────────────────────────────────────────────────────
-function StatCards() {
-  const activeCount = users.filter(u => u.status === 'Active').length;
-  const avgAdherence = Math.round(users.reduce((s, u) => s + u.hp, 0) / users.length);
-
-  return (
-    <div className="stats-row">
-      {/* Card 1: Active Patients */}
-      <div className="stat-card stat-card-playing">
-        <div className="stat-top">
-          <div className="stat-value">{activeCount}</div>
-          <div className="stat-label">Active Patients</div>
-        </div>
-        <div style={{ height: 48 }}>
-          <ResponsiveContainer width="100%" height={48}>
-            <BarChart data={miniBarData} margin={{ top:0,right:0,bottom:0,left:0 }}>
-              <Bar dataKey="v" fill="rgba(255,255,255,0.4)" radius={[0,0,0,0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Card 2: Sessions Today */}
-      <div className="stat-card stat-card-today">
-        <div className="stat-top">
-          <div className="stat-value">38</div>
-          <div className="stat-label">Sessions Today</div>
-        </div>
-        <Gauge pct={0.65} size={106} />
-      </div>
-
-      {/* Card 3: Avg Adherence */}
-      <div className="stat-card stat-card-total">
-        <div className="stat-total-header">
-          <div className="stat-total-label">Avg HP</div>
-          <div style={{ width: 8, height: 8, background: '#7c3aed', boxShadow: '2px 2px 0 rgba(0,0,0,0.5)' }} />
-        </div>
-        <div style={{ height: 44 }}>
-          <ResponsiveContainer width="100%" height={44}>
-            <AreaChart data={miniLineData} margin={{ top:2,right:0,bottom:0,left:0 }}>
-              <defs>
-                <linearGradient id="areaHP" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="10%" stopColor="#7c3aed" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#7c3aed" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <Area type="monotone" dataKey="v" stroke="#a78bfa" strokeWidth={2}
-                fill="url(#areaHP)" dot={false} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-        <div>
-          <div className="stat-value" style={{ fontSize: 18 }}>{avgAdherence}%</div>
-          <div className="stat-label">Avg Adherence</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Users Table ───────────────────────────────────────────────────────────
-function PatientsTable() {
-  const [search, setSearch] = useState('');
-  const filtered = users.filter(u => u.name.toLowerCase().includes(search.toLowerCase()));
-
-  return (
-    <div className="table-section">
-      <div className="table-header">
-        <span className="table-title">Patients</span>
-        <div className="table-toolbar">
-          <div className="table-search">
-            <Search size={11} className="table-search-icon" />
-            <input
-              type="text"
-              placeholder="Search patient name..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
-          </div>
-          <button className="filter-btn">
-            <SlidersHorizontal size={11} />
-            Filter
-          </button>
-        </div>
-      </div>
-
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Patient</th>
-            <th>Condition</th>
-            <th style={{ minWidth: 80 }}>HP / Adherence</th>
-            <th>Hero</th>
-            <th>XP</th>
-            <th><Flame size={11} style={{ verticalAlign: 'middle' }} /> Streak</th>
-            <th>Country</th>
-            <th>Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.map((u, i) => {
-            const stage = getHeroStage(u.hp);
-            return (
-              <tr key={u.id}>
-                <td>
-                  <span className={`rank-num${u.rank <= 3 ? ' top' : ''}`}>
-                    {u.rank <= 3
-                    ? <Award size={14} color={['#fcd34d','#94a3b8','#b45309'][u.rank-1]} />
-                    : `#${u.rank}`}
-                  </span>
-                </td>
-                <td>
-                  <div className="user-cell">
-                    <div
-                      className="user-av-sm"
-                      style={{ background: avatarColors[i % avatarColors.length] }}
-                    >
-                      {u.name[0]}
-                    </div>
-                    <div>
-                      <div className="user-name-tbl">{u.name}</div>
-                      <div className="hero-class">Lv.{u.level}</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <span className={`cond-badge ${condClass(u.condition)}`}>
-                    {u.condition}
-                  </span>
-                </td>
-                <td><HpBar hp={u.hp} /></td>
-                <td style={{ fontFamily: "'Press Start 2P',monospace", fontSize: 8, color: '#c4b5fd' }}>
-                  {stage}
-                </td>
-                <td style={{ fontFamily: "'Press Start 2P',monospace", fontSize: 8, color: '#a78bfa' }}>
-                  {u.xp.toLocaleString()}
-                </td>
-                <td>
-                  <span className="streak-cell"><Flame size={10} color="#fbbf24" /> {u.streak}d</span>
-                </td>
-                <td><span className="country-flag">{u.countryCode}</span></td>
-                <td>
-                  <span className={`status-badge${u.status === 'Inactive' ? ' inactive' : ''}`}>
-                    <span className="status-dot" />
-                    {u.status}
-                  </span>
-                </td>
-                <td>
-                  <button className="action-btn"><MoreVertical size={13} /></button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-// ── Therapy Packs Panel ──────────────────────────────────────────────────
-function TherapyPacksPanel() {
-  return (
-    <div className="popular-games">
-      <div className="panel-header">
-        <span className="panel-title">Therapy Packs</span>
-        <button className="panel-menu"><MoreVertical size={15} /></button>
-      </div>
-      <div className="game-list">
-        {popularGames.map(g => (
-          <div className="game-item" key={g.id}>
-            <div className="game-thumb" style={{ background: g.bg }}>
-              <PackIcon name={g.iconName} size={20} color="#fff" />
-            </div>
-            <div className="game-info">
-              <div className="game-name">{g.title}</div>
-              <div className="game-pub">{g.publisher}</div>
-              <div className="game-desc">{g.desc}</div>
-              <div className="game-stats-row">
-                <span className="game-stat"><UsersIcon size={9} /> {g.likes}</span>
-                <span className="game-stat"><Zap size={9} /> {g.plays.toLocaleString()}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ── Page ─────────────────────────────────────────────────────────────────
 export default function Users() {
   return (
     <div>
       <div className="page-header">
         <div>
-          <div className="page-title">Patients</div>
-          <div className="page-subtitle">
-            Monitor patient heroes, adherence HP, therapy progress and streaks
+          <div className="page-title">My Child</div>
+          <div className="page-subtitle">Alex's profile — condition, medications, assigned therapy packs and session log</div>
+        </div>
+      </div>
+
+      {/* Profile + medications */}
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginBottom:14 }}>
+
+        {/* Profile card */}
+        <div style={{ background:'#0f0f22', border:'2px solid #2a1a5e', boxShadow:'4px 4px 0 rgba(0,0,0,0.5)' }}>
+          <div style={{ padding:'12px 16px', borderBottom:'2px solid #2a1a5e', background:'#0d0d20' }}>
+            <span style={{ fontFamily:"'Press Start 2P',monospace", fontSize:8, color:'#c4b5fd' }}>Child Profile</span>
+          </div>
+          <div style={{ padding:20 }}>
+            <div style={{ display:'flex', alignItems:'flex-start', gap:16, marginBottom:20 }}>
+              <div style={{
+                width:60, height:60, background:childProfile.avatarBg,
+                boxShadow:'4px 4px 0 rgba(0,0,0,0.5)',
+                display:'flex', alignItems:'center', justifyContent:'center',
+                fontFamily:"'Press Start 2P',monospace", fontSize:16, color:'#fff', flexShrink:0,
+              }}>{childProfile.avatar}</div>
+              <div>
+                <div style={{ fontFamily:"'Press Start 2P',monospace", fontSize:13, color:'#fff', marginBottom:6 }}>{childProfile.name}</div>
+                <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
+                  <span className="cond-badge cond-adhd">{childProfile.condition}</span>
+                  <span style={{ fontSize:9, fontWeight:800, color:'#fbbf24', background:'rgba(251,191,36,0.1)', border:'1px solid rgba(251,191,36,0.3)', padding:'3px 7px', boxShadow:'2px 2px 0 rgba(0,0,0,0.4)' }}>
+                    Lv.{childProfile.level} {childProfile.heroStage}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* HP bar */}
+            <div style={{ marginBottom:16 }}>
+              <div className="bar-label" style={{ marginBottom:4 }}>
+                <span className="bar-label-text">HP (Adherence)</span>
+                <span className="bar-label-val">{childProfile.hp}/100</span>
+              </div>
+              <div className="bar-track" style={{ height:10 }}>
+                <div className="bar-fill bar-fill-hp-hi" style={{ width:`${childProfile.hp}%` }} />
+              </div>
+            </div>
+
+            <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
+              {[
+                { icon:User,     label:'Age',          value:`${childProfile.age} years old`  },
+                { icon:Calendar, label:'Joined',        value:childProfile.joinedDate           },
+                { icon:Activity, label:'Therapist',     value:childProfile.therapist            },
+                { icon:Calendar, label:'Next Session',  value:childProfile.nextSession          },
+              ].map(({ icon:Icon, label, value }) => (
+                <div key={label} style={{ display:'flex', alignItems:'center', gap:10, padding:'9px 0', borderBottom:'1px solid rgba(255,255,255,0.04)' }}>
+                  <Icon size={13} color="#3c3c68" style={{ flexShrink:0 }} />
+                  <span style={{ fontSize:10, fontWeight:700, color:'#6060a0', width:96, flexShrink:0, textTransform:'uppercase', letterSpacing:0.5 }}>{label}</span>
+                  <span style={{ fontSize:12, fontWeight:600, color:'#b0b0d8' }}>{value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Medications */}
+        <div style={{ background:'#0f0f22', border:'2px solid #2a1a5e', boxShadow:'4px 4px 0 rgba(0,0,0,0.5)' }}>
+          <div style={{ padding:'12px 16px', borderBottom:'2px solid #2a1a5e', background:'#0d0d20' }}>
+            <span style={{ fontFamily:"'Press Start 2P',monospace", fontSize:8, color:'#c4b5fd' }}>Medications Today</span>
+          </div>
+          <div style={{ padding:20 }}>
+            {childMedications.map((med, i) => (
+              <div key={i} style={{
+                background:'rgba(255,255,255,0.02)',
+                border:`2px solid ${med.takenToday ? '#05966922' : '#dc262622'}`,
+                boxShadow:'3px 3px 0 rgba(0,0,0,0.4)',
+                padding:16, marginBottom:12,
+                display:'flex', alignItems:'center', gap:14,
+              }}>
+                <div style={{ width:40, height:40, background:med.color+'22', border:`2px solid ${med.color}44`, boxShadow:'2px 2px 0 rgba(0,0,0,0.4)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                  <Pill size={18} color={med.color} />
+                </div>
+                <div style={{ flex:1 }}>
+                  <div style={{ fontFamily:"'Press Start 2P',monospace", fontSize:10, color:'#fff', marginBottom:3 }}>{med.name}</div>
+                  <div style={{ fontSize:11, color:'#6060a0', marginBottom:8 }}>{med.dose} · {med.time}</div>
+                  <div className="bar-label" style={{ marginBottom:3 }}>
+                    <span style={{ fontSize:8, fontWeight:800, color:'#3c3c68', textTransform:'uppercase', letterSpacing:0.8 }}>Adherence</span>
+                    <span style={{ fontFamily:"'Press Start 2P',monospace", fontSize:7, color:med.color }}>{med.adherence}%</span>
+                  </div>
+                  <div className="bar-track" style={{ height:6 }}>
+                    <div className="bar-fill" style={{ width:`${med.adherence}%`, background:med.color }} />
+                  </div>
+                </div>
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:3, flexShrink:0 }}>
+                  {med.takenToday
+                    ? <><CheckCircle size={18} color="#34d399" /><span style={{ fontSize:9, fontWeight:800, color:'#34d399' }}>Taken</span></>
+                    : <><XCircle size={18} color="#f87171" /><span style={{ fontSize:9, fontWeight:800, color:'#f87171' }}>Missed</span></>
+                  }
+                </div>
+              </div>
+            ))}
+
+            <div style={{ background:'rgba(124,58,237,0.08)', border:'2px solid #2a1a5e', borderLeft:'3px solid #7c3aed', padding:'10px 14px', fontSize:11, color:'#6060a0', lineHeight:1.5 }}>
+              💡 <strong style={{ color:'#c4b5fd' }}>Tip:</strong> Every dose taken earns Alex HP for his hero. High HP unlocks better rewards!
+            </div>
           </div>
         </div>
       </div>
-      <StatCards />
-      <div className="users-content">
-        <PatientsTable />
-        <TherapyPacksPanel />
+
+      {/* Assigned packs */}
+      <div style={{ background:'#0f0f22', border:'2px solid #2a1a5e', boxShadow:'4px 4px 0 rgba(0,0,0,0.5)', marginBottom:14 }}>
+        <div style={{ padding:'12px 16px', borderBottom:'2px solid #2a1a5e', background:'#0d0d20' }}>
+          <span style={{ fontFamily:"'Press Start 2P',monospace", fontSize:8, color:'#c4b5fd' }}>Assigned Therapy Packs</span>
+        </div>
+        <div style={{ padding:16, display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:12 }}>
+          {assignedPacks.map(pack => (
+            <div key={pack.id} style={{ background:'rgba(255,255,255,0.02)', border:`2px solid ${pack.color}33`, boxShadow:'3px 3px 0 rgba(0,0,0,0.4)', padding:16 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10 }}>
+                <div style={{ width:40, height:40, background:pack.bg, border:`2px solid ${pack.color}44`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                  <PackIcon name={pack.iconName} size={18} color={pack.color} />
+                </div>
+                <div>
+                  <div style={{ fontSize:12, fontWeight:800, color:'#d8d8f8' }}>{pack.title}</div>
+                  <div style={{ fontSize:9, fontWeight:700, color:pack.color, textTransform:'uppercase', letterSpacing:0.5 }}>{pack.subtitle}</div>
+                </div>
+              </div>
+              <div style={{ fontSize:10, color:'#3c3c68', marginBottom:12, lineHeight:1.4 }}>{pack.desc}</div>
+              <div className="bar-label">
+                <span className="bar-label-text">Progress</span>
+                <span className="bar-label-val" style={{ color:pack.color }}>{pack.sessionsCompleted}/{pack.totalSessions} sessions</span>
+              </div>
+              <div className="bar-track" style={{ height:8 }}>
+                <div className="bar-fill" style={{ width:`${(pack.sessionsCompleted/pack.totalSessions)*100}%`, background:pack.color }} />
+              </div>
+              <div style={{ marginTop:8, fontSize:10, fontWeight:600, color:'#3c3c68' }}>Last played: {pack.lastPlayed}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Session history */}
+      <div style={{ background:'#0f0f22', border:'2px solid #2a1a5e', boxShadow:'4px 4px 0 rgba(0,0,0,0.5)' }}>
+        <div style={{ padding:'12px 16px', borderBottom:'2px solid #2a1a5e', background:'#0d0d20' }}>
+          <span style={{ fontFamily:"'Press Start 2P',monospace", fontSize:8, color:'#c4b5fd' }}>Session History</span>
+        </div>
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Pack</th>
+              <th>Duration</th>
+              <th>Score</th>
+              <th>XP Earned</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sessionHistory.map((s, i) => (
+              <tr key={i}>
+                <td style={{ fontWeight:700, color:'#d8d8f8' }}>{s.date}</td>
+                <td style={{ color:'#6060a0', fontSize:11 }}>{s.time}</td>
+                <td style={{ fontWeight:600, color:'#c4b5fd' }}>{s.pack}</td>
+                <td style={{ color:'#b0b0d8' }}>{s.duration}</td>
+                <td>
+                  {s.completed
+                    ? <span style={{ fontFamily:"'Press Start 2P',monospace", fontSize:8, color:'#a78bfa' }}>{s.score}</span>
+                    : <span style={{ color:'#3c3c68' }}>—</span>}
+                </td>
+                <td>
+                  <span style={{ fontFamily:"'Press Start 2P',monospace", fontSize:8, color: s.xpEarned > 0 ? '#fbbf24' : '#3c3c68' }}>
+                    {s.xpEarned > 0 ? `+${s.xpEarned}` : '0'} XP
+                  </span>
+                </td>
+                <td>
+                  <span className={`status-badge${s.completed ? '' : ' inactive'}`}>
+                    <span className="status-dot" />
+                    {s.completed ? 'Done' : 'Missed'}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

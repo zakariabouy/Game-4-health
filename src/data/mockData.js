@@ -121,3 +121,67 @@ export const pillData = [
   { name:'Omega-3',    time:'08:00', adherence:78, color:'#f59e0b' },
   { name:'Vit D',      time:'12:00', adherence:65, color:'#ec4899' },
 ];
+
+// ── Parent Portal — child-specific data ──────────────────────────────────
+export const childProfile = {
+  name: 'Alex Chen', age: 10, condition: 'ADHD', gender: 'Male',
+  hp: 85, xp: 1240, xpToNext: 1500, level: 8, streak: 7,
+  heroStage: 'Champion', avatarBg: '#06b6d4', avatar: 'AC', status: 'Active',
+  therapist: 'Dr. Martin Lee', therapistAvatar: 'ML',
+  nextSession: 'Thu, Apr 9', joinedDate: 'Sep 2024',
+};
+
+export const childMedications = [
+  { name:'Ritalin', dose:'10mg',  time:'08:00 AM', adherence:92, color:'#7c3aed', takenToday:true  },
+  { name:'Omega-3', dose:'500mg', time:'08:00 AM', adherence:78, color:'#f59e0b', takenToday:false },
+];
+
+export const assignedPacks = [
+  { id:2, title:'ADHD Pack',       subtitle:'Focus Training',      iconName:'Zap',  bg:'#1a1a08', color:'#fcd34d',
+    desc:'Focus Sprint challenges train sustained attention and impulse control through rapid cognitive exercises.',
+    sessionsCompleted:24, totalSessions:30, lastPlayed:'Today',     progress:80 },
+  { id:5, title:'Medication Pack', subtitle:'Pill Hero Adherence', iconName:'Pill', bg:'#1a0a2a', color:'#c4b5fd',
+    desc:'Daily pill tracking. Take pills → hero gains HP. Miss pills → hero loses HP.',
+    sessionsCompleted:52, totalSessions:60, lastPlayed:'Today',     progress:87 },
+];
+
+export const sessionHistory = [
+  { date:'Today',     time:'09:14', pack:'ADHD Pack',       duration:'12m', xpEarned:80,  score:94,  completed:true  },
+  { date:'Today',     time:'08:02', pack:'Medication Pack', duration:'3m',  xpEarned:50,  score:100, completed:true  },
+  { date:'Yesterday', time:'10:30', pack:'ADHD Pack',       duration:'18m', xpEarned:120, score:87,  completed:true  },
+  { date:'Yesterday', time:'08:01', pack:'Medication Pack', duration:'3m',  xpEarned:50,  score:100, completed:true  },
+  { date:'Apr 1',     time:'14:20', pack:'ADHD Pack',       duration:'14m', xpEarned:95,  score:91,  completed:true  },
+  { date:'Apr 1',     time:'08:00', pack:'Medication Pack', duration:'3m',  xpEarned:0,   score:0,   completed:false },
+  { date:'Mar 31',    time:'11:05', pack:'ADHD Pack',       duration:'10m', xpEarned:65,  score:82,  completed:true  },
+  { date:'Mar 31',    time:'08:03', pack:'Medication Pack', duration:'3m',  xpEarned:50,  score:100, completed:true  },
+];
+
+export const childProgressData = [
+  { month:'Sep', hp:42, xp:120  }, { month:'Oct', hp:55, xp:340  },
+  { month:'Nov', hp:61, xp:580  }, { month:'Dec', hp:68, xp:790  },
+  { month:'Jan', hp:72, xp:910  }, { month:'Feb', hp:78, xp:1040 },
+  { month:'Mar', hp:82, xp:1140 }, { month:'Apr', hp:85, xp:1240 },
+];
+
+export const weeklyActivity = [
+  { day:'Mon', sessions:2, minutes:25 }, { day:'Tue', sessions:1, minutes:12 },
+  { day:'Wed', sessions:3, minutes:38 }, { day:'Thu', sessions:2, minutes:22 },
+  { day:'Fri', sessions:2, minutes:15 }, { day:'Sat', sessions:1, minutes:8  },
+  { day:'Sun', sessions:0, minutes:0  },
+];
+
+export const therapistMessages = [
+  { from:'Dr. Martin Lee', time:'Yesterday', avatar:'ML',
+    text:"Alex had a great session today! His focus during ADHD exercises improved noticeably. Keep the Ritalin schedule — it's making a real difference to his HP score." },
+  { from:'Dr. Martin Lee', time:'Mar 28', avatar:'ML',
+    text:"Reminder: Alex's next in-person evaluation is April 9. Please ensure medications are taken consistently this week." },
+];
+
+export const childRewards = [
+  { name:'Champion Badge', xpCost:0,   earned:true,  iconName:'Shield',     color:'#60a5fa', desc:'Reached Champion hero tier!',     earnedDate:'Mar 15' },
+  { name:'7-Day Streak',   xpCost:0,   earned:true,  iconName:'Flame',      color:'#fbbf24', desc:'7 days played in a row',          earnedDate:'Today'  },
+  { name:'Focus Master',   xpCost:0,   earned:true,  iconName:'Zap',        color:'#fcd34d', desc:'Completed all ADHD focus levels', earnedDate:'Mar 20' },
+  { name:'Dragon Skin',    xpCost:500, earned:false, iconName:'Star',       color:'#ec4899', desc:'Unlock Dragon look for your hero'   },
+  { name:'2× XP Boost',    xpCost:300, earned:false, iconName:'TrendingUp', color:'#10b981', desc:'Double XP for 24 hours'             },
+  { name:'Legendary Chest',xpCost:800, earned:false, iconName:'Crown',      color:'#f9a8d4', desc:'Rare items inside'                  },
+];

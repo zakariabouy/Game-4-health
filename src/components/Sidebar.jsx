@@ -1,16 +1,12 @@
-import {
-  LayoutDashboard, Users, Gamepad2, Gift, Radio,
-  Trophy, HelpCircle, DollarSign, Share2, Wallet, Settings,
-  Pill, BarChart2,
-} from 'lucide-react';
+import { Home, User, Gamepad2, TrendingUp, Trophy, Settings, Pill } from 'lucide-react';
 
 const NAV = [
-  { id: 'dashboard', label: 'Dashboard',     icon: LayoutDashboard },
-  { id: 'users',      label: 'Patients',      icon: Users           },
-  { id: 'games',      label: 'Therapy Packs', icon: Gamepad2        },
-  { id: 'analytics',  label: 'Analytics',     icon: BarChart2       },
-  { id: 'rewards',    label: 'Rewards',       icon: Trophy          },
-  { id: 'settings',   label: 'Settings',     icon: Settings        },
+  { id: 'dashboard',  label: 'Home',       icon: Home       },
+  { id: 'users',      label: 'My Child',   icon: User       },
+  { id: 'games',      label: 'Activities', icon: Gamepad2   },
+  { id: 'analytics',  label: 'Progress',   icon: TrendingUp },
+  { id: 'rewards',    label: 'Rewards',    icon: Trophy     },
+  { id: 'settings',   label: 'Settings',   icon: Settings   },
 ];
 
 export default function Sidebar({ currentPage, onNavigate }) {
@@ -20,7 +16,7 @@ export default function Sidebar({ currentPage, onNavigate }) {
         <div className="logo-icon">G4</div>
         <div>
           <div className="logo-text">G4Health</div>
-          <div className="logo-subtitle">Admin Console</div>
+          <div className="logo-subtitle">Parent Portal</div>
         </div>
       </div>
 
@@ -39,8 +35,8 @@ export default function Sidebar({ currentPage, onNavigate }) {
 
       <div className="sidebar-promo">
         <div className="promo-icon"><Pill size={22} color="#c4b5fd" /></div>
-        <p className="promo-title">Pill Hero streak active! Keep taking your meds.</p>
-        <button className="promo-btn">View Progress</button>
+        <p className="promo-title">Alex's Pill Hero streak is active! Keep it going.</p>
+        <button className="promo-btn" onClick={() => onNavigate('users')}>View Meds</button>
       </div>
     </aside>
   );

@@ -19,7 +19,7 @@ const PAGES = {
 };
 
 export default function App() {
-  const [page, setPage] = useState('users');
+  const [page, setPage] = useState('dashboard');
 
   return (
     <div className="app-layout">
