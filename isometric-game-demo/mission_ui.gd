@@ -3,24 +3,31 @@ extends CanvasLayer
 
 const LetterFlipGame = preload("res://games/letter_flip_game.gd")
 const DoseDodgeGame = preload("res://games/dose_dodge_game.gd")
+const StressRunnerGame = preload("res://games/stress_runner_game.gd")
+const MysticWoodsGame = preload("res://games/mystic_woods_game.gd")
 
 var GAME_MAP: Dictionary = {
+	# Dyslexia
 	"g1": LetterFlipGame,
 	"g2": DoseDodgeGame,
 	"g3": LetterFlipGame,
 	"g6": DoseDodgeGame,
-	"a1": LetterFlipGame,
-	"a2": DoseDodgeGame,
-	"a3": LetterFlipGame,
-	"a4": DoseDodgeGame,
-	"n1": LetterFlipGame,
-	"n2": DoseDodgeGame,
-	"n3": LetterFlipGame,
-	"n4": DoseDodgeGame,
-	"u1": LetterFlipGame,
-	"u2": DoseDodgeGame,
-	"u3": LetterFlipGame,
-	"u4": DoseDodgeGame,
+	# ADHD — stress runner (focus + calm under pressure)
+	"a1": StressRunnerGame,
+	"a2": StressRunnerGame,
+	"a3": StressRunnerGame,
+	"a4": StressRunnerGame,
+	# Anxiety — Mystic Woods + calm-down missions
+	"mw1": MysticWoodsGame,
+	"n1": StressRunnerGame,
+	"n2": StressRunnerGame,
+	"n3": StressRunnerGame,
+	"n4": StressRunnerGame,
+	# Autism
+	"u1": DoseDodgeGame,
+	"u2": LetterFlipGame,
+	"u3": DoseDodgeGame,
+	"u4": LetterFlipGame,
 }
 
 var current_mission: Dictionary = {}
@@ -57,10 +64,10 @@ func _ready() -> void:
 	popup_bg.anchor_top = 0.5
 	popup_bg.anchor_right = 0.5
 	popup_bg.anchor_bottom = 0.5
-	popup_bg.offset_left = -190
-	popup_bg.offset_top = -179
-	popup_bg.offset_right = 190
-	popup_bg.offset_bottom = 179
+	popup_bg.offset_left = -220
+	popup_bg.offset_top = -220
+	popup_bg.offset_right = 220
+	popup_bg.offset_bottom = 220
 	popup_bg.visible = false
 	add_child(popup_bg)
 
@@ -71,10 +78,10 @@ func _ready() -> void:
 	content.anchor_top = 0.0
 	content.anchor_right = 1.0
 	content.anchor_bottom = 1.0
-	content.offset_left = 45
-	content.offset_top = 55
-	content.offset_right = -45
-	content.offset_bottom = -35
+	content.offset_left = 50
+	content.offset_top = 60
+	content.offset_right = -50
+	content.offset_bottom = -55
 	content.alignment = BoxContainer.ALIGNMENT_CENTER
 	content.add_theme_constant_override("separation", 8)
 	popup_bg.add_child(content)

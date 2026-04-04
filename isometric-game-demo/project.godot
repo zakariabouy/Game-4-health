@@ -27,6 +27,7 @@ config/icon="res://icon.webp"
 [autoload]
 
 GameManager="*res://game_manager.gd"
+StressMonitor="*res://stress_monitor.gd"
 
 [display]
 

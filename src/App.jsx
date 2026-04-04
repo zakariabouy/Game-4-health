@@ -75,8 +75,9 @@ const PACK_LIBRARY = [
     color: "#6BCB77",
     icon: "🌈",
     weeklyTarget: 4,
-    desc: "Calming, breathing, and confidence-building missions.",
+    desc: "Calming, breathing, and confidence-building missions, including Mystic Woods.",
     games: [
+      { id: "mw1", name: "Mystic Woods", cat: "anxiety", icon: "🌲", diff: "Medium", desc: "Walk the forest trail and calm the mind" },
       { id: "n1", name: "Breath Bubble", cat: "anxiety", icon: "💨", diff: "Easy", desc: "Match breathing to bubble size" },
       { id: "n2", name: "Worry Drop", cat: "anxiety", icon: "🍃", diff: "Easy", desc: "Let worries float away" },
       { id: "n3", name: "Brave Steps", cat: "anxiety", icon: "👣", diff: "Medium", desc: "Pick the calm next step" },
@@ -889,11 +890,122 @@ function GameRoutineBuilder({ onDone }) {
 }
 
 // ════════════════════════════════════════
+// MINI-GAME: Mystic Woods (Anxiety / Calm Quest)
+// ════════════════════════════════════════
+function GameMysticWoods({ onDone }) {
+  const path = useRef([
+    {
+      title: "Enter the Woods",
+      prompt: "The forest gate glows. What helps the hero start safely?",
+      options: ["Take a slow breath", "Run in fast", "Hide and wait"],
+      answer: "Take a slow breath",
+      reward: 20,
+    },
+    {
+      title: "Moon Pond",
+      prompt: "A calm pond appears. What keeps the hero balanced?",
+      options: ["Look at the water and breathe", "Jump in the water", "Shout loudly"],
+      answer: "Look at the water and breathe",
+      reward: 20,
+    },
+    {
+      title: "Lantern Trail",
+      prompt: "Three lantern paths are ahead. Which path feels safest?",
+      options: ["The bright clear path", "The dark shaky path", "The noisy windy path"],
+      answer: "The bright clear path",
+      reward: 25,
+    },
+    {
+      title: "Forest Spirit",
+      prompt: "The spirit asks for one calm move. What should the hero do?",
+      options: ["Count 3 slow breaths", "Hold the breath forever", "Rush to the end"],
+      answer: "Count 3 slow breaths",
+      reward: 30,
+    },
+  ]).current;
+  const [step, setStep] = useState(0);
+  const [score, setScore] = useState(0);
+  const [feedback, setFeedback] = useState(null);
+  const [done, setDone] = useState(false);
+  const current = path[step];
+
+  const pick = (choice) => {
+    if (feedback) return;
+    const correct = choice === current.answer;
+    setFeedback(correct ? "right" : "wrong");
+    if (correct) setScore((value) => value + current.reward);
+
+    setTimeout(() => {
+      setFeedback(null);
+      if (!correct) return;
+      if (step + 1 >= path.length) {
+        const finalScore = score + current.reward;
+        setDone(true);
+        onDone(finalScore);
+      } else {
+        setStep((value) => value + 1);
+      }
+    }, 750);
+  };
+
+  if (done) {
+    return (
+      <div className="game-done mystic-done">
+        <Confetti active={true} />
+        <div className="gd-emoji">🌲</div>
+        <h2>Mystic Woods Cleared!</h2>
+        <div className="gd-score">{score} pts</div>
+        <p>The forest is calm now. Your hero learned a peaceful routine.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="game-inner mystic-woods">
+      <div className="mystic-scene">
+        <div className="mystic-sky">
+          <span>🌙</span>
+          <span>✨</span>
+          <span>🌟</span>
+        </div>
+        <div className="mystic-trees">
+          <span>🌲</span>
+          <span>🌳</span>
+          <span>🌲</span>
+        </div>
+      </div>
+
+      <div className="gi-progress">
+        {path.map((_, i) => <div key={i} className={`gi-dot ${i < step ? "gi-done" : i === step ? "gi-now" : ""}`} />)}
+      </div>
+
+      <h2 className="gi-prompt">{current.title}</h2>
+      <p className="mystic-prompt">{current.prompt}</p>
+
+      <div className="mystic-options">
+        {current.options.map((choice) => (
+          <button
+            key={choice}
+            className={`mystic-option ${feedback === "right" && choice === current.answer ? "mystic-right" : ""} ${feedback === "wrong" && choice !== current.answer ? "mystic-wrong" : ""}`}
+            onClick={() => pick(choice)}
+          >
+            {choice}
+          </button>
+        ))}
+      </div>
+
+      {feedback && <div className={`gi-fb ${feedback}`}>{feedback === "right" ? "🌿 Calm choice!" : "🫧 Try the calmer path."}</div>}
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
 // GAME WRAPPER
 // ════════════════════════════════════════
 function renderGameEngine(gameId, cat, onDone) {
   if (gameId === "g1" || gameId === "g6") return <GameLetterFlip onDone={onDone} />;
   if (gameId === "g2" || gameId === "g3") return <GameWordBuilder onDone={onDone} />;
+  if (gameId === "mw1") return <GameMysticWoods onDone={onDone} />;
   if (cat === "anxiety") return <GameBreathBubble onDone={onDone} />;
   if (cat === "adhd") return <GameFocusSprint onDone={onDone} />;
   if (cat === "autism" && (gameId === "u2" || gameId === "u4")) return <GameEmotionMatch onDone={onDone} />;
@@ -2290,6 +2402,22 @@ button:focus-visible{
 .gl-desc{font-size:12px;color:#aaa;margin-top:2px}
 .gl-play{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--app-accent),var(--app-accent-strong));color:white;border:none;font-size:18px;cursor:pointer;transition:transform .2s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .gl-play:hover{transform:scale(1.1)}
+
+/* Mystic Woods */
+.mystic-woods{background:linear-gradient(180deg,#F2FFF4 0%,#E7F6EA 42%,#D9EECF 100%);border:2px solid #B8D7B7;border-radius:24px;padding:16px;gap:12px;box-shadow:0 12px 30px rgba(79,132,64,0.12)}
+.mystic-scene{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(180deg,#17352A 0%,#2E5F3D 45%,#79A85D 100%);padding:16px 14px 12px;min-height:140px;display:flex;flex-direction:column;justify-content:space-between}
+.mystic-sky,.mystic-trees{display:flex;justify-content:space-between;align-items:center}
+.mystic-sky span{font-size:18px;animation:sparkle 2.6s ease-in-out infinite}
+.mystic-sky span:nth-child(2){animation-delay:.4s}
+.mystic-sky span:nth-child(3){animation-delay:.8s}
+.mystic-trees span{font-size:54px;filter:drop-shadow(0 6px 10px rgba(0,0,0,0.18))}
+.mystic-prompt{font-size:14px;color:#24503A;font-weight:700;text-align:center;margin-top:-4px}
+.mystic-options{display:flex;flex-direction:column;gap:8px}
+.mystic-option{border:2px solid #AACF9E;background:linear-gradient(135deg,#FCFFFB,#EEF9E9);border-radius:16px;padding:12px 14px;font-size:14px;font-weight:800;color:#2D3436;cursor:pointer;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.mystic-option:hover{transform:translateY(-2px);border-color:#71B86C;box-shadow:0 8px 16px rgba(92,159,82,0.12)}
+.mystic-right{border-color:#66C18C;background:linear-gradient(135deg,#EBFFF3,#FFFFFF)}
+.mystic-wrong{border-color:#E49B9B;background:linear-gradient(135deg,#FFF0F0,#FFFFFF)}
+.mystic-done{background:linear-gradient(180deg,#F4FFF7,#ECFAEE);border:2px solid #A8D7B0}
 
 /* Rewards Page */
 .rw-balance{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#FFF5E4,#FFE8CC);padding:18px 22px;border-radius:18px;margin-bottom:16px}
