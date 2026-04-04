@@ -1,0 +1,231 @@
+// ── Hero stages ───────────────────────────────────────────────────────────
+export const HERO_STAGES = ['Sprout','Seedling','Warrior','Champion','Legend'];
+export const getHeroStage = (hp) => {
+  if (hp >= 90) return 'Legend';
+  if (hp >= 70) return 'Champion';
+  if (hp >= 45) return 'Warrior';
+  if (hp >= 20) return 'Seedling';
+  return 'Sprout';
+};
+
+// ── Patients — iconName = lucide icon, countryCode = ISO-2 ───────────────
+export const users = [
+  { id:1,  rank:1,  name:'Priya Singh',      condition:'Dyslexia', hp:93, xp:1750, level:11, streak:14, countryCode:'IN', status:'Active'   },
+  { id:2,  rank:2,  name:'Tony Stark',        condition:'ADHD',     hp:88, xp:1580, level:10, streak:12, countryCode:'US', status:'Active'   },
+  { id:3,  rank:3,  name:'Sofia Rodriguez',   condition:'Autism',   hp:90, xp:1420, level:9,  streak:10, countryCode:'MX', status:'Active'   },
+  { id:4,  rank:4,  name:'Emma Fischer',      condition:'Anxiety',  hp:82, xp:1320, level:9,  streak:6,  countryCode:'DE', status:'Active'   },
+  { id:5,  rank:5,  name:'Ahmed Outliers',         condition:'ADHD',     hp:85, xp:1240, level:8,  streak:7,  countryCode:'US', status:'Active'   },
+  { id:6,  rank:6,  name:'Aisha Okafor',      condition:'Dyslexia', hp:78, xp:1100, level:7,  streak:9,  countryCode:'NG', status:'Active'   },
+  { id:7,  rank:7,  name:'Maya Patel',        condition:'Dyslexia', hp:72, xp:980,  level:6,  streak:5,  countryCode:'IN', status:'Active'   },
+  { id:8,  rank:8,  name:'Omar Hassan',       condition:'ADHD',     hp:68, xp:890,  level:6,  streak:4,  countryCode:'EG', status:'Active'   },
+  { id:9,  rank:9,  name:'Leo Thompson',      condition:'Anxiety',  hp:60, xp:750,  level:5,  streak:3,  countryCode:'GB', status:'Active'   },
+  { id:10, rank:10, name:'Jake Williams',     condition:'ADHD',     hp:45, xp:420,  level:3,  streak:1,  countryCode:'AU', status:'Active'   },
+  { id:11, rank:11, name:'Liam Kim',          condition:'Anxiety',  hp:55, xp:640,  level:4,  streak:2,  countryCode:'KR', status:'Inactive' },
+  { id:12, rank:12, name:'Sam Davis',         condition:'Autism',   hp:30, xp:210,  level:2,  streak:0,  countryCode:'GB', status:'Inactive' },
+];
+
+export const avatarColors = [
+  '#7c3aed','#059669','#06b6d4','#d97706','#ec4899',
+  '#3b82f6','#10b981','#8b5cf6','#ef4444','#f59e0b',
+  '#14b8a6','#84cc16',
+];
+
+// ── Therapy Packs — iconName maps to lucide-react icons ──────────────────
+export const therapyPacks = [
+  { id:1, title:'Dyslexia Pack',   subtitle:'Mirror & Word Games',  iconName:'BookOpen',  bg:'#0e0e2a', color:'#67e8f9', patients:284, sessions:1240, rating:4.8,
+    desc:'Letter Flip and Word Builder — identify mirror letters and build words from scrambled tiles to retrain reading pathways.' },
+  { id:2, title:'ADHD Pack',       subtitle:'Focus Training',        iconName:'Zap',       bg:'#1a1a08', color:'#fcd34d', patients:196, sessions:880,  rating:4.6,
+    desc:'Focus Sprint challenges train sustained attention and impulse control through rapid cognitive exercises.' },
+  { id:3, title:'Autism Pack',     subtitle:'Social & Routine',      iconName:'Star',      bg:'#2a0a1a', color:'#f9a8d4', patients:158, sessions:720,  rating:4.9,
+    desc:'Emotion Match and Routine Builder help develop social cognition and daily structure for children on the spectrum.' },
+  { id:4, title:'Anxiety Pack',    subtitle:'Calming Exercises',     iconName:'Leaf',      bg:'#081a08', color:'#86efac', patients:212, sessions:960,  rating:4.7,
+    desc:'Breath Bubble and Mystic Woods provide soothing mechanics — breathing pacing and a calm forest exploration walk.' },
+  { id:5, title:'Medication Pack', subtitle:'Pill Hero Adherence',   iconName:'Pill',      bg:'#1a0a2a', color:'#c4b5fd', patients:341, sessions:2100, rating:4.9,
+    desc:'The Pill Hero system gamifies daily medication tracking. Take pills → hero gains HP. Miss pills → hero loses HP.' },
+  { id:6, title:'Mystic Woods',    subtitle:'Forest Walk / Anxiety', iconName:'TreePine',  bg:'#081408', color:'#4ade80', patients:142, sessions:540,  rating:4.5,
+    desc:'Guided forest exploration. Walk your hero through calming woodland environments, unlocking new areas as anxiety reduces.' },
+];
+
+export const allGames = therapyPacks;
+
+// ── Popular packs panel ──────────────────────────────────────────────────
+export const popularGames = [
+  { id:1, title:'Medication Pack', publisher:'Adherence Module', iconName:'Pill',     bg:'#1a0a2a', likes:341, plays:2100,
+    desc:'Pill Hero — daily pill tracking with hero HP tied to adherence rate.' },
+  { id:2, title:'Dyslexia Pack',   publisher:'Mirror & Words',   iconName:'BookOpen', bg:'#0e0e2a', likes:284, plays:1240,
+    desc:'Letter Flip + Word Builder — retrain reading via gamified letter recognition.' },
+  { id:3, title:'Anxiety Pack',    publisher:'Calming Series',   iconName:'Leaf',     bg:'#081a08', likes:212, plays:960,
+    desc:'Breath Bubble + Mystic Woods — paced breathing exercises and calming forest walk.' },
+  { id:4, title:'ADHD Pack',       publisher:'Focus Series',     iconName:'Zap',      bg:'#1a1a08', likes:196, plays:880,
+    desc:'Focus Sprint — timed target exercises to improve impulse control.' },
+  { id:5, title:'Autism Pack',     publisher:'Social Series',    iconName:'Star',     bg:'#2a0a1a', likes:158, plays:720,
+    desc:'Emotion Match + Routine Builder — social cues and daily structure.' },
+];
+
+// ── Chart / time-series data ──────────────────────────────────────────────
+export const weeklyActiveData = [
+  { day:'Mon', sessions:42 }, { day:'Tue', sessions:68 },
+  { day:'Wed', sessions:55 }, { day:'Thu', sessions:81 },
+  { day:'Fri', sessions:74 }, { day:'Sat', sessions:38 },
+  { day:'Sun', sessions:29 },
+];
+export const adherenceData = [
+  { month:'Jan', rate:71 }, { month:'Feb', rate:74 },
+  { month:'Mar', rate:69 }, { month:'Apr', rate:78 },
+  { month:'May', rate:82 }, { month:'Jun', rate:85 },
+  { month:'Jul', rate:88 }, { month:'Aug', rate:91 },
+];
+export const userGrowthData = [
+  { month:'Jan', total:28,  new:8  }, { month:'Feb', total:42,  new:14 },
+  { month:'Mar', total:58,  new:16 }, { month:'Apr', total:74,  new:16 },
+  { month:'May', total:94,  new:20 }, { month:'Jun', total:112, new:18 },
+  { month:'Jul', total:134, new:22 }, { month:'Aug', total:156, new:22 },
+];
+export const revenueData = [
+  { month:'Jan', xp:3200  }, { month:'Feb', xp:5100  },
+  { month:'Mar', xp:4600  }, { month:'Apr', xp:6800  },
+  { month:'May', xp:7200  }, { month:'Jun', xp:9400  },
+  { month:'Jul', xp:10800 }, { month:'Aug', xp:12600 },
+];
+export const conditionDistribution = [
+  { name:'ADHD',     value:34, color:'#fcd34d' },
+  { name:'Dyslexia', value:28, color:'#67e8f9' },
+  { name:'Autism',   value:22, color:'#f9a8d4' },
+  { name:'Anxiety',  value:16, color:'#86efac' },
+];
+export const gameDistribution = conditionDistribution;
+export const heroStageData = [
+  { stage:'Sprout',   count:18 }, { stage:'Seedling', count:32 },
+  { stage:'Warrior',  count:45 }, { stage:'Champion', count:38 },
+  { stage:'Legend',   count:23 },
+];
+export const retentionData = [
+  { day:'Day 1',  rate:100 }, { day:'Day 3',  rate:84 },
+  { day:'Day 7',  rate:71  }, { day:'Day 14', rate:62 },
+  { day:'Day 30', rate:54  }, { day:'Day 60', rate:47 },
+];
+export const countryData = [
+  { country:'United States',  users:38, pct:24 },
+  { country:'India',          users:29, pct:19 },
+  { country:'United Kingdom', users:21, pct:13 },
+  { country:'Germany',        users:17, pct:11 },
+  { country:'Australia',      users:14, pct:9  },
+  { country:'Others',         users:37, pct:24 },
+];
+export const miniBarData  = [{ v:30 },{ v:55 },{ v:42 },{ v:71 },{ v:58 },{ v:82 },{ v:68 }];
+export const miniLineData = [{ v:20 },{ v:38 },{ v:30 },{ v:52 },{ v:44 },{ v:67 },{ v:60 },{ v:74 },{ v:70 },{ v:88 }];
+export const pillData = [
+  { name:'Ritalin',    time:'08:00', adherence:92, color:'#7c3aed' },
+  { name:'Sertraline', time:'12:00', adherence:87, color:'#06b6d4' },
+  { name:'Melatonin',  time:'20:00', adherence:94, color:'#10b981' },
+  { name:'Omega-3',    time:'08:00', adherence:78, color:'#f59e0b' },
+  { name:'Vit D',      time:'12:00', adherence:65, color:'#ec4899' },
+];
+
+// ── Parent Portal — child-specific data ──────────────────────────────────
+export const childProfile = {
+  name: 'Ahmed Outliers', age: 10, condition: 'ADHD', gender: 'Male',
+  hp: 85, xp: 1240, xpToNext: 1500, level: 8, streak: 7,
+  heroStage: 'Champion', avatarBg: '#06b6d4', avatar: 'AO', status: 'Active',
+  therapist: 'Dr. Martin Lee', therapistAvatar: 'ML',
+  nextSession: 'Thu, Apr 9', joinedDate: 'Sep 2024',
+};
+
+export const childMedications = [
+  { name:'Ritalin', dose:'10mg',  time:'08:00 AM', adherence:92, color:'#7c3aed', takenToday:true  },
+  { name:'Omega-3', dose:'500mg', time:'08:00 AM', adherence:78, color:'#f59e0b', takenToday:false },
+];
+
+export const assignedPacks = [
+  { id:2, title:'ADHD Pack',       subtitle:'Focus Training',      iconName:'Zap',  bg:'#1a1a08', color:'#fcd34d',
+    desc:'Focus Sprint challenges train sustained attention and impulse control through rapid cognitive exercises.',
+    sessionsCompleted:24, totalSessions:30, lastPlayed:'Today',     progress:80 },
+  { id:5, title:'Medication Pack', subtitle:'Pill Hero Adherence', iconName:'Pill', bg:'#1a0a2a', color:'#c4b5fd',
+    desc:'Daily pill tracking. Take pills → hero gains HP. Miss pills → hero loses HP.',
+    sessionsCompleted:52, totalSessions:60, lastPlayed:'Today',     progress:87 },
+];
+
+export const sessionHistory = [
+  { date:'Today',     time:'09:14', pack:'ADHD Pack',       duration:'12m', xpEarned:80,  score:94,  completed:true  },
+  { date:'Today',     time:'08:02', pack:'Medication Pack', duration:'3m',  xpEarned:50,  score:100, completed:true  },
+  { date:'Yesterday', time:'10:30', pack:'ADHD Pack',       duration:'18m', xpEarned:120, score:87,  completed:true  },
+  { date:'Yesterday', time:'08:01', pack:'Medication Pack', duration:'3m',  xpEarned:50,  score:100, completed:true  },
+  { date:'Apr 1',     time:'14:20', pack:'ADHD Pack',       duration:'14m', xpEarned:95,  score:91,  completed:true  },
+  { date:'Apr 1',     time:'08:00', pack:'Medication Pack', duration:'3m',  xpEarned:0,   score:0,   completed:false },
+  { date:'Mar 31',    time:'11:05', pack:'ADHD Pack',       duration:'10m', xpEarned:65,  score:82,  completed:true  },
+  { date:'Mar 31',    time:'08:03', pack:'Medication Pack', duration:'3m',  xpEarned:50,  score:100, completed:true  },
+];
+
+export const childProgressData = [
+  { month:'Sep', hp:42, xp:120  }, { month:'Oct', hp:55, xp:340  },
+  { month:'Nov', hp:61, xp:580  }, { month:'Dec', hp:68, xp:790  },
+  { month:'Jan', hp:72, xp:910  }, { month:'Feb', hp:78, xp:1040 },
+  { month:'Mar', hp:82, xp:1140 }, { month:'Apr', hp:85, xp:1240 },
+];
+
+export const weeklyActivity = [
+  { day:'Mon', sessions:2, minutes:25 }, { day:'Tue', sessions:1, minutes:12 },
+  { day:'Wed', sessions:3, minutes:38 }, { day:'Thu', sessions:2, minutes:22 },
+  { day:'Fri', sessions:2, minutes:15 }, { day:'Sat', sessions:1, minutes:8  },
+  { day:'Sun', sessions:0, minutes:0  },
+];
+
+export const therapistMessages = [
+  { from:'Dr. Martin Lee', time:'Yesterday', avatar:'ML',
+    text:"Ahmed had a great session today! His focus during ADHD exercises improved noticeably. Keep the Ritalin schedule — it's making a real difference to his HP score." },
+  { from:'Dr. Martin Lee', time:'Mar 28', avatar:'ML',
+    text:"Reminder: Ahmed's next in-person evaluation is April 9. Please ensure medications are taken consistently this week." },
+];
+
+// ── Parental LLM Dashboard — EMG / Stress / BDNF data ───────────────────
+export const stressPeakData = [
+  { day:'Mon', peaks:4, avgIntensity:72, avgDuration:38, sessions:2 },
+  { day:'Tue', peaks:6, avgIntensity:81, avgDuration:52, sessions:1 },
+  { day:'Wed', peaks:2, avgIntensity:55, avgDuration:22, sessions:3 },
+  { day:'Thu', peaks:7, avgIntensity:88, avgDuration:61, sessions:2 },
+  { day:'Fri', peaks:3, avgIntensity:61, avgDuration:29, sessions:2 },
+  { day:'Sat', peaks:1, avgIntensity:44, avgDuration:15, sessions:1 },
+  { day:'Sun', peaks:0, avgIntensity:0,  avgDuration:0,  sessions:0 },
+];
+
+export const calmZoneData = [
+  { week:'W-7', calmPct:28 }, { week:'W-6', calmPct:31 },
+  { week:'W-5', calmPct:35 }, { week:'W-4', calmPct:38 },
+  { week:'W-3', calmPct:44 }, { week:'W-2', calmPct:51 },
+  { week:'W-1', calmPct:58 }, { week:'Now', calmPct:63 },
+];
+
+export const bdnfData = [
+  { week:'W-7', bdnf:32, activity:14 }, { week:'W-6', bdnf:38, activity:18 },
+  { week:'W-5', bdnf:41, activity:21 }, { week:'W-4', bdnf:45, activity:24 },
+  { week:'W-3', bdnf:51, activity:28 }, { week:'W-2', bdnf:57, activity:33 },
+  { week:'W-1', bdnf:62, activity:37 }, { week:'Now', bdnf:68, activity:42 },
+];
+
+export const breathingAdherence = [
+  { day:'Mon', done:true,  sessions:2 }, { day:'Tue', done:false, sessions:1 },
+  { day:'Wed', done:true,  sessions:3 }, { day:'Thu', done:true,  sessions:2 },
+  { day:'Fri', done:true,  sessions:2 }, { day:'Sat', done:false, sessions:1 },
+  { day:'Sun', done:false, sessions:0 },
+];
+
+export const llmAlerts = [
+  { id:1, type:'warning', title:'Stress spike detected',
+    body:'Ahmed showed 7 stress peaks on Thursday — 40% above his weekly average. Consider scheduling a breathing session before gaming on weekdays.',
+    action:'Add breathing session', actionColor:'#f59e0b', date:'Today' },
+  { id:2, type:'tip', title:'BDNF trending up 📈',
+    body:"Activity minutes increased 27% vs last week. Physical engagement is boosting estimated BDNF — keep the jumping exercises in the buddy routine.",
+    action:'View activity log', actionColor:'#34d399', date:'Today' },
+  { id:3, type:'info', title:'Calm zone milestone',
+    body:"Ahmed spent 63% of session time in the calm zone this week — a personal best! Calm zone trend has been improving for 4 consecutive weeks.",
+    action:'See progress chart', actionColor:'#818cf8', date:'Yesterday' },
+];
+
+export const childRewards = [
+  { name:'Champion Badge', xpCost:0,   earned:true,  iconName:'Shield',     color:'#60a5fa', desc:'Reached Champion hero tier!',     earnedDate:'Mar 15' },
+  { name:'7-Day Streak',   xpCost:0,   earned:true,  iconName:'Flame',      color:'#fbbf24', desc:'7 days played in a row',          earnedDate:'Today'  },
+  { name:'Focus Master',   xpCost:0,   earned:true,  iconName:'Zap',        color:'#fcd34d', desc:'Completed all ADHD focus levels', earnedDate:'Mar 20' },
+  { name:'Dragon Skin',    xpCost:500, earned:false, iconName:'Star',       color:'#ec4899', desc:'Unlock Dragon look for your hero'   },
+  { name:'2× XP Boost',    xpCost:300, earned:false, iconName:'TrendingUp', color:'#10b981', desc:'Double XP for 24 hours'             },
+  { name:'Legendary Chest',xpCost:800, earned:false, iconName:'Crown',      color:'#f9a8d4', desc:'Rare items inside'                  },
+];
