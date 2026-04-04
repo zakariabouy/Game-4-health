@@ -14,7 +14,7 @@ export const users = [
   { id:2,  rank:2,  name:'Tony Stark',        condition:'ADHD',     hp:88, xp:1580, level:10, streak:12, countryCode:'US', status:'Active'   },
   { id:3,  rank:3,  name:'Sofia Rodriguez',   condition:'Autism',   hp:90, xp:1420, level:9,  streak:10, countryCode:'MX', status:'Active'   },
   { id:4,  rank:4,  name:'Emma Fischer',      condition:'Anxiety',  hp:82, xp:1320, level:9,  streak:6,  countryCode:'DE', status:'Active'   },
-  { id:5,  rank:5,  name:'Alex Chen',         condition:'ADHD',     hp:85, xp:1240, level:8,  streak:7,  countryCode:'US', status:'Active'   },
+  { id:5,  rank:5,  name:'Ahmed Outliers',         condition:'ADHD',     hp:85, xp:1240, level:8,  streak:7,  countryCode:'US', status:'Active'   },
   { id:6,  rank:6,  name:'Aisha Okafor',      condition:'Dyslexia', hp:78, xp:1100, level:7,  streak:9,  countryCode:'NG', status:'Active'   },
   { id:7,  rank:7,  name:'Maya Patel',        condition:'Dyslexia', hp:72, xp:980,  level:6,  streak:5,  countryCode:'IN', status:'Active'   },
   { id:8,  rank:8,  name:'Omar Hassan',       condition:'ADHD',     hp:68, xp:890,  level:6,  streak:4,  countryCode:'EG', status:'Active'   },
@@ -124,9 +124,9 @@ export const pillData = [
 
 // ── Parent Portal — child-specific data ──────────────────────────────────
 export const childProfile = {
-  name: 'Alex Chen', age: 10, condition: 'ADHD', gender: 'Male',
+  name: 'Ahmed Outliers', age: 10, condition: 'ADHD', gender: 'Male',
   hp: 85, xp: 1240, xpToNext: 1500, level: 8, streak: 7,
-  heroStage: 'Champion', avatarBg: '#06b6d4', avatar: 'AC', status: 'Active',
+  heroStage: 'Champion', avatarBg: '#06b6d4', avatar: 'AO', status: 'Active',
   therapist: 'Dr. Martin Lee', therapistAvatar: 'ML',
   nextSession: 'Thu, Apr 9', joinedDate: 'Sep 2024',
 };
@@ -172,9 +172,53 @@ export const weeklyActivity = [
 
 export const therapistMessages = [
   { from:'Dr. Martin Lee', time:'Yesterday', avatar:'ML',
-    text:"Alex had a great session today! His focus during ADHD exercises improved noticeably. Keep the Ritalin schedule — it's making a real difference to his HP score." },
+    text:"Ahmed had a great session today! His focus during ADHD exercises improved noticeably. Keep the Ritalin schedule — it's making a real difference to his HP score." },
   { from:'Dr. Martin Lee', time:'Mar 28', avatar:'ML',
-    text:"Reminder: Alex's next in-person evaluation is April 9. Please ensure medications are taken consistently this week." },
+    text:"Reminder: Ahmed's next in-person evaluation is April 9. Please ensure medications are taken consistently this week." },
+];
+
+// ── Parental LLM Dashboard — EMG / Stress / BDNF data ───────────────────
+export const stressPeakData = [
+  { day:'Mon', peaks:4, avgIntensity:72, avgDuration:38, sessions:2 },
+  { day:'Tue', peaks:6, avgIntensity:81, avgDuration:52, sessions:1 },
+  { day:'Wed', peaks:2, avgIntensity:55, avgDuration:22, sessions:3 },
+  { day:'Thu', peaks:7, avgIntensity:88, avgDuration:61, sessions:2 },
+  { day:'Fri', peaks:3, avgIntensity:61, avgDuration:29, sessions:2 },
+  { day:'Sat', peaks:1, avgIntensity:44, avgDuration:15, sessions:1 },
+  { day:'Sun', peaks:0, avgIntensity:0,  avgDuration:0,  sessions:0 },
+];
+
+export const calmZoneData = [
+  { week:'W-7', calmPct:28 }, { week:'W-6', calmPct:31 },
+  { week:'W-5', calmPct:35 }, { week:'W-4', calmPct:38 },
+  { week:'W-3', calmPct:44 }, { week:'W-2', calmPct:51 },
+  { week:'W-1', calmPct:58 }, { week:'Now', calmPct:63 },
+];
+
+export const bdnfData = [
+  { week:'W-7', bdnf:32, activity:14 }, { week:'W-6', bdnf:38, activity:18 },
+  { week:'W-5', bdnf:41, activity:21 }, { week:'W-4', bdnf:45, activity:24 },
+  { week:'W-3', bdnf:51, activity:28 }, { week:'W-2', bdnf:57, activity:33 },
+  { week:'W-1', bdnf:62, activity:37 }, { week:'Now', bdnf:68, activity:42 },
+];
+
+export const breathingAdherence = [
+  { day:'Mon', done:true,  sessions:2 }, { day:'Tue', done:false, sessions:1 },
+  { day:'Wed', done:true,  sessions:3 }, { day:'Thu', done:true,  sessions:2 },
+  { day:'Fri', done:true,  sessions:2 }, { day:'Sat', done:false, sessions:1 },
+  { day:'Sun', done:false, sessions:0 },
+];
+
+export const llmAlerts = [
+  { id:1, type:'warning', title:'Stress spike detected',
+    body:'Ahmed showed 7 stress peaks on Thursday — 40% above his weekly average. Consider scheduling a breathing session before gaming on weekdays.',
+    action:'Add breathing session', actionColor:'#f59e0b', date:'Today' },
+  { id:2, type:'tip', title:'BDNF trending up 📈',
+    body:"Activity minutes increased 27% vs last week. Physical engagement is boosting estimated BDNF — keep the jumping exercises in the buddy routine.",
+    action:'View activity log', actionColor:'#34d399', date:'Today' },
+  { id:3, type:'info', title:'Calm zone milestone',
+    body:"Ahmed spent 63% of session time in the calm zone this week — a personal best! Calm zone trend has been improving for 4 consecutive weeks.",
+    action:'See progress chart', actionColor:'#818cf8', date:'Yesterday' },
 ];
 
 export const childRewards = [

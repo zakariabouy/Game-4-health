@@ -16,7 +16,7 @@ export default function Rewards() {
       <div className="page-header">
         <div>
           <div className="page-title">Rewards</div>
-          <div className="page-subtitle">Alex's earned badges and rewards available to unlock with XP</div>
+          <div className="page-subtitle">Ahmed's earned badges and rewards available to unlock with XP</div>
         </div>
       </div>
 
@@ -43,7 +43,7 @@ export default function Rewards() {
       {/* Earned badges */}
       <div className="chart-card" style={{ marginBottom:16 }}>
         <div className="chart-title">Earned Badges</div>
-        <div className="chart-sub">Rewards Alex has unlocked through play and medication adherence</div>
+        <div className="chart-sub">Rewards Ahmed has unlocked through play and medication adherence</div>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12, marginTop:14 }}>
           {earnedRewards.map(r => (
             <div key={r.name} style={{
@@ -69,7 +69,7 @@ export default function Rewards() {
       <div className="chart-card">
         <div className="chart-title">Unlock with XP</div>
         <div className="chart-sub">
-          Spend Alex's XP to unlock these rewards — current balance:{' '}
+          Spend Ahmed's XP to unlock these rewards — current balance:{' '}
           <span style={{ fontFamily:"'Press Start 2P',monospace", fontSize:9, color:'#f59e0b' }}>{childProfile.xp.toLocaleString()} XP</span>
         </div>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12, marginTop:14 }}>

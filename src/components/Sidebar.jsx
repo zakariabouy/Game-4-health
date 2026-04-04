@@ -16,7 +16,7 @@ export default function Sidebar({ currentPage, onNavigate }) {
         <div className="logo-icon">G4</div>
         <div>
           <div className="logo-text">G4Health</div>
-          <div className="logo-subtitle">Parent Portal</div>
+          <div className="logo-subtitle">Parents Outliers</div>
         </div>
       </div>
 
@@ -35,7 +35,7 @@ export default function Sidebar({ currentPage, onNavigate }) {
 
       <div className="sidebar-promo">
         <div className="promo-icon"><Pill size={22} color="#c4b5fd" /></div>
-        <p className="promo-title">Alex's Pill Hero streak is active! Keep it going.</p>
+        <p className="promo-title">Ahmed's Pill Hero streak is active! Keep it going.</p>
         <button className="promo-btn" onClick={() => onNavigate('users')}>View Meds</button>
       </div>
     </aside>

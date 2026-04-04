@@ -33,7 +33,7 @@ export default function Analytics() {
       <div className="page-header">
         <div>
           <div className="page-title">Progress</div>
-          <div className="page-subtitle">Alex's development — HP trend, XP growth, activity and medication adherence</div>
+          <div className="page-subtitle">Ahmed's development — HP trend, XP growth, activity and medication adherence</div>
         </div>
         <div style={{ display:'flex', gap:6 }}>
           {['7D','30D','3M','All'].map(t => (
@@ -74,7 +74,7 @@ export default function Analytics() {
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginBottom:14 }}>
         <div className="chart-card">
           <div className="chart-title">HP Trend</div>
-          <div className="chart-sub">Alex's adherence score since joining</div>
+          <div className="chart-sub">Ahmed's adherence score since joining</div>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={childProgressData} margin={{ top:5,right:10,bottom:0,left:-25 }}>
               <defs>
@@ -131,7 +131,7 @@ export default function Analytics() {
 
         <div className="chart-card">
           <div className="chart-title">Medication Adherence</div>
-          <div className="chart-sub">Per-medication adherence rates for Alex</div>
+          <div className="chart-sub">Per-medication adherence rates for Ahmed</div>
           <div style={{ marginTop:20, display:'flex', flexDirection:'column', gap:16 }}>
             {childMedications.map(med => (
               <div key={med.name}>

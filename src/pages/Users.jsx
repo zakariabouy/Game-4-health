@@ -13,7 +13,7 @@ export default function Users() {
       <div className="page-header">
         <div>
           <div className="page-title">My Child</div>
-          <div className="page-subtitle">Alex's profile — condition, medications, assigned therapy packs and session log</div>
+          <div className="page-subtitle">Ahmed's profile — condition, medications, assigned therapy packs and session log</div>
         </div>
       </div>
 
@@ -110,7 +110,7 @@ export default function Users() {
             ))}
 
             <div style={{ background:'rgba(124,58,237,0.08)', border:'2px solid #2a1a5e', borderLeft:'3px solid #7c3aed', padding:'10px 14px', fontSize:11, color:'#6060a0', lineHeight:1.5 }}>
-              💡 <strong style={{ color:'#c4b5fd' }}>Tip:</strong> Every dose taken earns Alex HP for his hero. High HP unlocks better rewards!
+              💡 <strong style={{ color:'#c4b5fd' }}>Tip:</strong> Every dose taken earns Ahmed HP for his hero. High HP unlocks better rewards!
             </div>
           </div>
         </div>

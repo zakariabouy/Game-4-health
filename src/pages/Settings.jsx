@@ -115,12 +115,12 @@ function ChildSection() {
 
 function NotificationsSection() {
   const notifs = [
-    { label:'Daily activity summary',  desc:"Get a daily recap of Alex's sessions and medication",   on:true  },
-    { label:'Missed medication alert', desc:'Notify when Alex misses a scheduled medication dose',    on:true  },
-    { label:'Streak milestones',       desc:"Celebrate when Alex hits streak milestones",             on:true  },
+    { label:'Daily activity summary',  desc:"Get a daily recap of Ahmed's sessions and medication",   on:true  },
+    { label:'Missed medication alert', desc:'Notify when Ahmed misses a scheduled medication dose',    on:true  },
+    { label:'Streak milestones',       desc:"Celebrate when Ahmed hits streak milestones",             on:true  },
     { label:'Therapist messages',      desc:`Notify when ${childProfile.therapist} sends a message`,  on:true  },
-    { label:'Weekly progress report',  desc:"Weekly summary of Alex's development and progress",     on:false },
-    { label:'Reward unlocks',          desc:"Notify when Alex earns or unlocks a reward",            on:false },
+    { label:'Weekly progress report',  desc:"Weekly summary of Ahmed's development and progress",     on:false },
+    { label:'Reward unlocks',          desc:"Notify when Ahmed earns or unlocks a reward",            on:false },
   ];
   return (
     <div className="s-section">
@@ -203,7 +203,7 @@ function TherapistSection() {
       <div className="s-section-title">Send Message</div>
       <div className="form-group" style={{ marginBottom:12 }}>
         <label className="form-label">Subject</label>
-        <input className="form-input" placeholder="e.g. Question about Alex's progress" />
+        <input className="form-input" placeholder="e.g. Question about Ahmed's progress" />
       </div>
       <div className="form-group" style={{ marginBottom:16 }}>
         <label className="form-label">Message</label>

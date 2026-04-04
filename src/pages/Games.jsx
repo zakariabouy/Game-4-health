@@ -26,7 +26,7 @@ export default function Games() {
       <div className="page-header">
         <div>
           <div className="page-title">Activities</div>
-          <div className="page-subtitle">Alex's assigned therapy packs, weekly activity and session log</div>
+          <div className="page-subtitle">Ahmed's assigned therapy packs, weekly activity and session log</div>
         </div>
       </div>
 
