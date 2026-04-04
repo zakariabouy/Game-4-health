@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1775260285
+::res://::1775263456
 dungeon.tscn::PackedScene::5462994485494508073::1775204724::0::1::::<><><>0<>0<><>::uid://ceswxvl27cesm::::res://tileset/tileset.tres<>uid://cy8biel27i5i7::::res://decorations/wall_skull.png<>uid://bqpkxht3mx8l8::::res://player/goblin.tscn<>res://decorations/candle.tscn<>uid://bqugyxfkeyt7x::::res://decorations/rug_1.png<>uid://bycat883fu7q2::::res://decorations/banner.png<>uid://dxxtyefaa4rtn::::res://decorations/vase_1.tscn<>uid://ccxtgas16pmio::::res://decorations/vase_2.tscn<>res://decorations/coin_pile.tscn<>res://decorations/bone_pile_1.tscn<>res://decorations/bone_pile_2.tscn<>uid://cginrtmcplrec::::res://decorations/glow.png<>uid://cmxo4k7h2nl7h::::res://decorations/shadow_gradient.png<>res://decorations/internal_shadow.tscn<>uid://dahfdmuvra5we::::res://decorations/drape_1.png<>uid://dmqbp4e43sm1t::::res://decorations/paw_prints.png<>uid://d3j0qnogdctw4::::res://decorations/crow_sleep.png<>uid://dami7imxtk2iq::::res://decorations/crow_looking.png<>uid://dqqjnuoyx8mpj::::res://mission_spawner.gd<>uid://b3ym8vgvedlf1::::res://mission_ui.gd
 game_manager.gd::GDScript::4962229774700442305::1775247628::0::1::::<>Node<><>0<>0<><>::
 goblin_speech.gd::GDScript::8565253268629975618::1775195436::0::1::::<>Node2D<><>0<>0<><>::
