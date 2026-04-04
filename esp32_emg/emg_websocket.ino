@@ -27,8 +27,8 @@
 #include <WebSocketsServer.h>
 
 // ─── CONFIG ───
-const char* WIFI_SSID     = "YOUR_WIFI_SSID";      // ← Change this
-const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";   // ← Change this
+const char* WIFI_SSID     = "ALTIDORE";
+const char* WIFI_PASSWORD = "bouy1234";
 const int   EMG_PIN       = 34;                     // ADC pin for EMG sensor
 const int   SEND_INTERVAL = 100;                    // ms between WebSocket sends
 const int   SMOOTHING     = 10;                     // moving average window size

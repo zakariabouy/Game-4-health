@@ -16,7 +16,9 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="Frogger"
 run/main_scene="uid://d1a15tilsrxbk"
-config/features=PackedStringArray("4.6", "Forward Plus")
+config/features=PackedStringArray("4.6", "GL Compatibility")
+run/low_processor_mode=true
+boot_splash/show_image=false
 config/icon="res://icon.svg"
 
 [display]
@@ -30,3 +32,4 @@ window/stretch/mode="viewport"
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="gl_compatibility"

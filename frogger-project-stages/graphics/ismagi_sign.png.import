@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://citx1456et058"
-valid=false
+uid="uid://dguwm8o3e38w2"
+path="res://.godot/imported/ismagi_sign.png-672b874b78a8c15c42521ff227413007.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://graphics/ismagi_sign.png"
+dest_files=["res://.godot/imported/ismagi_sign.png-672b874b78a8c15c42521ff227413007.ctex"]
 
 [params]
 

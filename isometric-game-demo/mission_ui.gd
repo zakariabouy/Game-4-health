@@ -7,6 +7,8 @@ const StressRunnerGame = preload("res://games/stress_runner_game.gd")
 const MysticWoodsGame = preload("res://games/mystic_woods_game.gd")
 
 var GAME_MAP: Dictionary = {
+	# Frogger
+	"fr1": "res://games/frogger/scenes/game.tscn",
 	# Dyslexia
 	"g1": LetterFlipGame,
 	"g2": DoseDodgeGame,
@@ -166,10 +168,20 @@ func _on_play_pressed() -> void:
 	var mission_id: String = current_mission.get("id", "")
 	var game_script = GAME_MAP.get(mission_id, LetterFlipGame)
 
-	active_game_node = CanvasLayer.new()
-	active_game_node.set_script(game_script)
-	get_tree().root.add_child(active_game_node)
-	active_game_node.game_finished.connect(_on_game_finished.bind(mission_id))
+	if typeof(game_script) == TYPE_STRING:
+		var scene_res = load(game_script)
+		active_game_node = scene_res.instantiate()
+		get_tree().root.add_child(active_game_node)
+	else:
+		active_game_node = CanvasLayer.new()
+		active_game_node.set_script(game_script)
+		get_tree().root.add_child(active_game_node)
+	
+	if active_game_node.has_signal("game_finished"):
+		active_game_node.game_finished.connect(_on_game_finished.bind(mission_id))
+	elif active_game_node is Node2D:
+		# Just in case the script is loaded but type checker isn't seeing signal
+		active_game_node.connect("game_finished", _on_game_finished.bind(mission_id))
 
 func _on_game_finished(game_score: int, mission_id: String) -> void:
 	if active_game_node and is_instance_valid(active_game_node):

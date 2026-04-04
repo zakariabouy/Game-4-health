@@ -18,6 +18,8 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	position += direction * speed * delta
+	if abs(position.x) > 400:
+		queue_free()
 
 func _on_screen_exited() -> void:
 	queue_free()

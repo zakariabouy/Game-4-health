@@ -2,6 +2,7 @@ extends Node2D
 
 var score: int = 0
 var stress_level: float = 0.0
+var use_sensor: bool = false
 var car_scene = preload("res://scenes/car.tscn")
 var lanes = [164, 141, 114, 93, 3, -25, -51, -94, -115]
 var cleared_lanes = []
@@ -10,7 +11,7 @@ func _ready() -> void:
 	$CanvasLayer/ScoreLabel.text = "0"
 	$CanvasLayer/StressBar.value = 0.0
 	$CanvasLayer/PauseMenu.visible = false
-	
+
 	var path = ProjectSettings.globalize_path("res://graphics/stress_popup.png")
 	if FileAccess.file_exists(path):
 		var img = Image.load_from_file(path)
@@ -30,16 +31,20 @@ func _process(delta: float) -> void:
 				cleared_lanes.append(lane)
 				score += 1
 				$CanvasLayer/ScoreLabel.text = str(score)
-	
-	if Input.is_action_pressed("ui_up") and Input.is_key_pressed(KEY_SHIFT):
-		if not get_tree().paused:
-			stress_level += 50.0 * delta
-	if Input.is_action_pressed("ui_down") and Input.is_key_pressed(KEY_SHIFT):
-		stress_level -= 50.0 * delta
-		
+
+	if not use_sensor:
+		if Input.is_action_pressed("ui_up") and Input.is_key_pressed(KEY_SHIFT):
+			if not get_tree().paused:
+				stress_level += 50.0 * delta
+		if Input.is_action_pressed("ui_down") and Input.is_key_pressed(KEY_SHIFT):
+			stress_level -= 50.0 * delta
+
+	if use_sensor and Input.is_action_pressed("ui_down") and Input.is_key_pressed(KEY_SHIFT):
+		stress_level -= 30.0 * delta
+
 	stress_level = clamp(stress_level, 0.0, 100.0)
 	$CanvasLayer/StressBar.value = stress_level
-	
+
 	if stress_level >= 100.0 and not get_tree().paused:
 		_trigger_stress_pause()
 	elif stress_level < 80.0 and get_tree().paused:
@@ -54,20 +59,31 @@ func _trigger_stress_pause() -> void:
 func _resume_from_stress() -> void:
 	get_tree().paused = false
 	$CanvasLayer/PauseMenu.visible = false
-	score += 5
+	var bonus = 10
+	score += bonus
 	$CanvasLayer/ScoreLabel.text = str(score)
+	_show_bonus_text("+" + str(bonus) + " coins! Stay calm!")
 
 var last_spawn_time = {}
 
+func _get_car_count() -> int:
+	var count = 0
+	for child in get_children():
+		if child.is_in_group("cars"):
+			count += 1
+	return count
+
 func _on_car_timer_timeout() -> void:
+	if _get_car_count() >= 30:
+		return
 	var markers = $CarStartPositions.get_children()
 	var current_time = Time.get_ticks_msec()
-	
+
 	var safe_markers = []
 	for marker in markers:
 		if not last_spawn_time.has(marker) or (current_time - last_spawn_time[marker]) > 1000:
 			safe_markers.append(marker)
-			
+
 	if safe_markers.size() > 0:
 		var spawner = safe_markers[randi() % safe_markers.size()]
 		last_spawn_time[spawner] = current_time
@@ -89,10 +105,29 @@ func _add_coin_score() -> void:
 	if $Audio/SFX_Win.stream:
 		$Audio/SFX_Win.play()
 
+func _show_bonus_text(text: String) -> void:
+	var label = Label.new()
+	label.text = text
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_font_override("font", preload("res://fonts/Better VCR 9.0.1.ttf"))
+	label.add_theme_font_size_override("font_size", 16)
+	label.add_theme_color_override("font_color", Color(1, 0.85, 0))
+	label.position = Vector2(100, 80)
+	$CanvasLayer.add_child(label)
+	var tween = create_tween()
+	tween.tween_property(label, "position:y", 50.0, 0.8)
+	tween.parallel().tween_property(label, "modulate:a", 0.0, 0.8)
+	tween.tween_callback(label.queue_free)
+
+func set_sensor_stress(value: float) -> void:
+	use_sensor = true
+	stress_level = value * 100.0
+
 func reset_score() -> void:
 	score = 0
 	cleared_lanes.clear()
 	$CanvasLayer/ScoreLabel.text = "0"
-
-
-
+	for child in get_children():
+		if child.is_in_group("cars"):
+			child.queue_free()
+	last_spawn_time.clear()

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://df5u8p1hjfqxw"]
 
-[ext_resource type="Script" uid="uid://d3yq8l5b4nmc1" path="res://scenes/car.gd" id="1_car"]
+[ext_resource type="Script" path="res://scenes/car.gd" id="1_car"]
 [ext_resource type="Texture2D" uid="uid://b8fq8sgkmu4dx" path="res://graphics/objects/green car.png" id="2_car_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_car"]

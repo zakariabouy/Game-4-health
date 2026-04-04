@@ -1,12 +1,10 @@
 [gd_scene format=3 uid="uid://6rt6j4h172du"]
 
 [ext_resource type="Texture2D" uid="uid://d0so81ys3820n" path="res://graphics/objects/tree1.png" id="1_iphuf"]
-[ext_resource type="Script" uid="uid://dl2t6pmhtpwqb" path="res://scenes/car.gd" id="1_ldj7v"]
 [ext_resource type="Texture2D" uid="uid://y3ndpd5bhsi3" path="res://graphics/objects/tree2.png" id="2_ldj7v"]
 [ext_resource type="Texture2D" uid="uid://y78osdw0bolc" path="res://graphics/objects/box1.png" id="3_prgxy"]
 
 [node name="ExerciseObject" type="Node2D" unique_id=507374695]
-script = ExtResource("1_ldj7v")
 
 [node name="Tree1" type="Sprite2D" parent="." unique_id=637709838]
 texture = ExtResource("1_iphuf")

@@ -26,6 +26,7 @@ var ALL_MISSIONS: Dictionary = {
 	"u3": { "id": "u3", "name": "Calm Corner",      "cat": "autism",   "icon": "🫧", "desc": "Breathing and calming practice!",              "color": Color(0.635, 0.608, 0.996) },
 	"u4": { "id": "u4", "name": "Social Sequence",  "cat": "autism",   "icon": "🗣️", "desc": "Choose the next social step!",                "color": Color(0.635, 0.608, 0.996) },
 	# ── Anxiety Pack ──
+	"fr1": { "id": "fr1", "name": "Frogger Cross", "cat": "anxiety", "icon": "🐸", "desc": "Cross the street carefully without getting hit!", "color": Color(0.2, 0.8, 0.2) },
 	"mw1": { "id": "mw1", "name": "Mystic Woods",    "cat": "anxiety",  "icon": "🌲", "desc": "Follow the calm forest path and collect glowing spirits!", "color": Color(0.420, 0.796, 0.467) },
 	"n1": { "id": "n1", "name": "Breath Bubble",    "cat": "anxiety",  "icon": "💨", "desc": "Breathe in and out with the bubble!",          "color": Color(0.420, 0.796, 0.467) },
 	"n2": { "id": "n2", "name": "Worry Drop",       "cat": "anxiety",  "icon": "🍃", "desc": "Let worries float gently away!",               "color": Color(0.420, 0.796, 0.467) },
@@ -38,7 +39,7 @@ var PACKS: Dictionary = {
 	"dyslexia": ["g1", "g2", "g3", "g6"],
 	"adhd":     ["a1", "a2", "a3", "a4"],
 	"autism":   ["u1", "u2", "u3", "u4"],
-	"anxiety":  ["mw1", "n1", "n2", "n3", "n4"],
+	"anxiety":  ["fr1", "mw1", "n1", "n2", "n3", "n4"],
 }
 
 # ─── State ───

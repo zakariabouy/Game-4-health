@@ -1,12 +1,12 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1775263456
+::res://::1775315282
 dungeon.tscn::PackedScene::5462994485494508073::1775204724::0::1::::<><><>0<>0<><>::uid://ceswxvl27cesm::::res://tileset/tileset.tres<>uid://cy8biel27i5i7::::res://decorations/wall_skull.png<>uid://bqpkxht3mx8l8::::res://player/goblin.tscn<>res://decorations/candle.tscn<>uid://bqugyxfkeyt7x::::res://decorations/rug_1.png<>uid://bycat883fu7q2::::res://decorations/banner.png<>uid://dxxtyefaa4rtn::::res://decorations/vase_1.tscn<>uid://ccxtgas16pmio::::res://decorations/vase_2.tscn<>res://decorations/coin_pile.tscn<>res://decorations/bone_pile_1.tscn<>res://decorations/bone_pile_2.tscn<>uid://cginrtmcplrec::::res://decorations/glow.png<>uid://cmxo4k7h2nl7h::::res://decorations/shadow_gradient.png<>res://decorations/internal_shadow.tscn<>uid://dahfdmuvra5we::::res://decorations/drape_1.png<>uid://dmqbp4e43sm1t::::res://decorations/paw_prints.png<>uid://d3j0qnogdctw4::::res://decorations/crow_sleep.png<>uid://dami7imxtk2iq::::res://decorations/crow_looking.png<>uid://dqqjnuoyx8mpj::::res://mission_spawner.gd<>uid://b3ym8vgvedlf1::::res://mission_ui.gd
-game_manager.gd::GDScript::4962229774700442305::1775247628::0::1::::<>Node<><>0<>0<><>::
+game_manager.gd::GDScript::4962229774700442305::1775294407::0::1::::<>Node<><>0<>0<><>::
 goblin_speech.gd::GDScript::8565253268629975618::1775195436::0::1::::<>Node2D<><>0<>0<><>::
 icon.webp::CompressedTexture2D::8738855909306577333::1775177632::1775177648::1::::<><><>0<>0<>0f42034507db882870f615c9e7809487<>res://.godot/imported/icon.webp-e94f9a68b0f625a567a797079e4d325f.ctex::
 mission_spawner.gd::GDScript::8315884334825201583::1775188516::0::1::::<>Node2D<><>0<>0<><>::
 mission_spot.gd::GDScript::9047693006632245155::1775185229::0::1::::<>Area2D<><>0<>0<><>::
-mission_ui.gd::GDScript::4402042019986301160::1775253336::0::1::::<>CanvasLayer<><>0<>0<><>::
+mission_ui.gd::GDScript::4402042019986301160::1775294431::0::1::::<>CanvasLayer<><>0<>0<><>::
 README.md::TextFile::-1::1775177632::0::1::::<><><>0<>0<><>::
 stress_monitor.gd::GDScript::3277043022193229994::1775235721::0::1::::<>Node<><>0<>0<><>::
 ::res://decorations/::1775196761
@@ -45,11 +45,62 @@ vase_1.tscn::PackedScene::8822282842832285951::1775177632::0::1::::<><><>0<>0<><
 vase_2.png::CompressedTexture2D::5148151634734134507::1775177632::1775177648::1::::<><><>0<>0<>20209eb71db6c230209bcc068b495379<>res://.godot/imported/vase_2.png-d6cca4a3647dd9b8a230cb201e6f4d32.ctex::
 vase_2.tscn::PackedScene::4961864109661464566::1775177632::0::1::::<><><>0<>0<><>::uid://cfl2km5k5pbgd::::res://decorations/vase_2.png
 wall_skull.png::CompressedTexture2D::6525573312283075336::1775177632::1775177648::1::::<><><>0<>0<>704c3589ff8668e5d7bd7cee2ee44c55<>res://.godot/imported/wall_skull.png-b65fc438ee51c09cef1ea57aa5c7d6b2.ctex::
-::res://games/::1775253679
+::res://games/::1775294238
 dose_dodge_game.gd::GDScript::2213086319237338383::1775197739::0::1::::<>CanvasLayer<><>0<>0<><>::
 letter_flip_game.gd::GDScript::3683853352578828156::1775197694::0::1::::<>CanvasLayer<><>0<>0<><>::
 mystic_woods_game.gd::GDScript::8534466597696022887::1775253679::0::1::::<>CanvasLayer<><>0<>0<><>::
 stress_runner_game.gd::GDScript::5586037255713472856::1775235923::0::1::::<>CanvasLayer<><>0<>0<><>::
+::res://games/frogger/::1775294497
+asset sources.txt::TextFile::-1::1775253223::0::1::::<><><>0<>0<><>::
+icon.svg::CompressedTexture2D::5991746675164270125::1775253223::1775294497::1::::<><><>0<>0<>5c051623881a120dbc6a3bf368840c6a<>res://.godot/imported/icon.svg-be6701c25ee3fd600adea898030d9d3d.ctex::
+::res://games/frogger/audio/::1775294497
+S31-City on Speed.ogg::AudioStreamOggVorbis::8977675062932144427::1775253223::1775294497::1::::<><><>0<>0<>65a3631201da0f273a31756bb1721dd6<>res://.godot/imported/S31-City on Speed.ogg-f044f3297a55a18e2aea651c1429b9a8.oggvorbisstr::
+::res://games/frogger/fonts/::1775294497
+Better VCR 9.0.1.ttf::FontFile::525264482665087361::1775253223::1775294497::1::::<><><>0<>0<>738148189be2808df8478ca8929f35f1<>res://.godot/imported/Better VCR 9.0.1.ttf-f6d6454769e59b913e7dd7594a118f65.fontdata::
+Crackman.otf::FontFile::8409775716835545339::1775253223::1775294497::1::::<><><>0<>0<>eea9364f484cbd7d8e9b8515159b326b<>res://.godot/imported/Crackman.otf-485b652a90df8db55f31cfa1143743d9.fontdata::
+::res://games/frogger/graphics/::1775294498
+map.png::CompressedTexture2D::8154739344879193416::1775253223::1775294497::1::::<><><>0<>0<>898ba2c2ce07d3f0fc0462de3dd892a9<>res://.godot/imported/map.png-b1b17cd263d56cdece170a9a2658a836.ctex::
+stress_popup.png::CompressedTexture2D::2252873584905705435::1775264765::1775294498::1::::<><><>0<>0<>ca4d4315dff77100bea7d99f216d3cc9<>res://.godot/imported/stress_popup.png-f2e16129b0c2c3fa16c452943ae7e0c3.ctex::
+::res://games/frogger/graphics/cars/::1775294498
+green.png::CompressedTexture2D::8921634929582336167::1775253223::1775294498::1::::<><><>0<>0<>27da64d36cb4dbcd90d0fecec6f3a370<>res://.godot/imported/green.png-8db07505eadd55936e79fcef7676c37b.ctex::
+red.png::CompressedTexture2D::987328342467456120::1775253223::1775294498::1::::<><><>0<>0<>48b9e1d35af3a290c4d42add7e49a686<>res://.godot/imported/red.png-1c7ee4f3afa468a681bdb8e574429677.ctex::
+yellow.png::CompressedTexture2D::7448227804407725056::1775253223::1775294498::1::::<><><>0<>0<>e3a6bfbffaeab6e783310e10e2cf93ae<>res://.godot/imported/yellow.png-58a6f56de97719e3e06997c4e5f2b9cd.ctex::
+::res://games/frogger/graphics/objects/::1775294498
+barrier.png::CompressedTexture2D::6896529938505155778::1775253223::1775294498::1::::<><><>0<>0<>5cd28923d25ed7a869e1fdac2b418466<>res://.godot/imported/barrier.png-3df558c3532d589f8103739390e7bf37.ctex::
+bench.png::CompressedTexture2D::6429655348521337844::1775253223::1775294498::1::::<><><>0<>0<>3d5d0cefb072f2d9647e9ed0e0b8951f<>res://.godot/imported/bench.png-ac7c011598e8af835a74a3ccef106534.ctex::
+bin.png::CompressedTexture2D::2682534749361739666::1775253223::1775294497::1::::<><><>0<>0<>9f4bc097dca48f20a6b2c2a3e2ae8e7b<>res://.godot/imported/bin.png-d8e01c6481fcac9caf49f5fa42b2d324.ctex::
+box1.png::CompressedTexture2D::1752621948406411336::1775253223::1775294497::1::::<><><>0<>0<>b8444dc83a3119674fd2be26ba23d28e<>res://.godot/imported/box1.png-dbb9bb28002c7b6bd837ca545ba3ad6b.ctex::
+box2.png::CompressedTexture2D::6315073086859623796::1775253223::1775294497::1::::<><><>0<>0<>821144b66b40c3feb07feb7fb52d5070<>res://.godot/imported/box2.png-8253a9f075f2465aa1a61262b9a43947.ctex::
+box3.png::CompressedTexture2D::6209916766526943924::1775253223::1775294497::1::::<><><>0<>0<>d556251b2960b37da0ec27ee15ed1f89<>res://.godot/imported/box3.png-b7cfa26f0ce4eea6141ade74014ab697.ctex::
+green car.png::CompressedTexture2D::4714005770761932689::1775253223::1775294497::1::::<><><>0<>0<>5eba74ca52a749d1931515241bda9fcf<>res://.godot/imported/green car.png-32bec86c7629189252b6f3e5d9a7a5d3.ctex::
+house1.png::CompressedTexture2D::9000159394168210468::1775253223::1775294497::1::::<><><>0<>0<>69a517d4606730db84c627df466cda1a<>res://.godot/imported/house1.png-6f96ebc3c5de62b0592d6b89741ff005.ctex::
+house2.png::CompressedTexture2D::8778240621995606057::1775253223::1775294497::1::::<><><>0<>0<>39da0c72dafc146163a4ee3ffabf76e8<>res://.godot/imported/house2.png-a5fc4e10ea15f1a9ab8b2b3797ff8430.ctex::
+house3.png::CompressedTexture2D::2304218856311349850::1775253223::1775294497::1::::<><><>0<>0<>a5425761c350251431fd18c690599de3<>res://.godot/imported/house3.png-bd52326d7d458abdbe0d2263f9e6a906.ctex::
+light.png::CompressedTexture2D::138251092854304931::1775253223::1775294497::1::::<><><>0<>0<>40aea49784f0ddc5302f0c7e517f0b35<>res://.godot/imported/light.png-8caad412007514284c1b5929814ba909.ctex::
+line.png::CompressedTexture2D::4370422361334549835::1775253223::1775294497::1::::<><><>0<>0<>47a4338b80bc9abc3bb1ba7b202ed452<>res://.godot/imported/line.png-93756a32fe6403100fd45c9bb04ff321.ctex::
+red car.png::CompressedTexture2D::5238494849298767641::1775253223::1775294497::1::::<><><>0<>0<>a0328884b67f457572752e7850af9212<>res://.godot/imported/red car.png-7b274de68dbdc232141ac9f4bcd46bef.ctex::
+sign.png::CompressedTexture2D::1016072921141247133::1775253223::1775294497::1::::<><><>0<>0<>4660530365d0b93e01f3c4bf66cd5f24<>res://.godot/imported/sign.png-0e1563edbfe58faa73355f4c107d83e2.ctex::
+taxi.png::CompressedTexture2D::2174422772300677415::1775253223::1775294497::1::::<><><>0<>0<>3256bbd25fd107227443f1610af34fe9<>res://.godot/imported/taxi.png-6cc3937d7e246697eefbcf293c6a1b4e.ctex::
+traffic.png::CompressedTexture2D::5133731283848118079::1775253223::1775294497::1::::<><><>0<>0<>9703a12cc67ea0afe165ae88b78b524c<>res://.godot/imported/traffic.png-2858da95e799a325c1f6ed5031d590ce.ctex::
+tree1.png::CompressedTexture2D::8952052314239774675::1775253223::1775294497::1::::<><><>0<>0<>c3716bbad47f42a19c387a5bedb165aa<>res://.godot/imported/tree1.png-4d5520bd907cbccf440417d34142b1be.ctex::
+tree2.png::CompressedTexture2D::1743130296563490364::1775253223::1775294497::1::::<><><>0<>0<>b10d96aff1b2fb70ece54f362b6e4923<>res://.godot/imported/tree2.png-c7d8ad5fbf7103b4e57d56965fdaa2ce.ctex::
+tree potted.png::CompressedTexture2D::3389544860567921485::1775253223::1775294497::1::::<><><>0<>0<>840bbe958b46b79bd7e6dde9e0a745ba<>res://.godot/imported/tree potted.png-1541cf8742f7e7d6ff65200ab5fe7bd8.ctex::
+::res://games/frogger/graphics/player/::1775294497
+player_simple.png::CompressedTexture2D::3101742799475853270::1775253223::1775294497::1::::<><><>0<>0<>6528ca6b8711490132aa64e92048c81c<>res://.godot/imported/player_simple.png-e11848e86c16467f82dff848379653bc.ctex::
+player_tileset.png::CompressedTexture2D::6843235375669234817::1775253223::1775294497::1::::<><><>0<>0<>c632be7bdf769060bf85559808752cbe<>res://.godot/imported/player_tileset.png-aa3b496fa1e75266f109d3bc7f9d38c6.ctex::
+::res://games/frogger/progress/::1775294241
+::res://games/frogger/scenes/::1775294241
+box.tscn::PackedScene::4107931645821412315::1775294384::0::1::::<><><>0<>0<><>::uid://y78osdw0bolc::::res://games/frogger/graphics/objects/box1.png
+car.gd::GDScript::7988287319662846977::1775294384::0::1::::<>Area2D<><>0<>0<><>::
+car.tscn::PackedScene::7573411701290907004::1775294384::0::1::::<><><>0<>0<><>::uid://d3yq8l5b4nmc1::::res://games/frogger/scenes/car.gd<>uid://b8fq8sgkmu4dx::::res://games/frogger/graphics/objects/green car.png
+coin.gd::GDScript::4652226708179122579::1775268725::0::1::::<>Area2D<><>0<>0<><>::
+coin.tscn::PackedScene::195656611976195890::1775294384::0::1::::<><><>0<>0<><>::res://games/frogger/scenes/coin.gd<>res://games/frogger/graphics/coin.png
+exercise_object.tscn::PackedScene::2212158074935195814::1775294384::0::1::::<><><>0<>0<><>::uid://d0so81ys3820n::::res://games/frogger/graphics/objects/tree1.png<>uid://dl2t6pmhtpwqb::::res://games/frogger/scenes/car.gd<>uid://y3ndpd5bhsi3::::res://games/frogger/graphics/objects/tree2.png<>uid://y78osdw0bolc::::res://games/frogger/graphics/objects/box1.png
+game.gd::GDScript::3117704014478754851::1775294440::0::1::::<>Node2D<><>0<>0<><>::
+game.tscn::PackedScene::8985805212123846672::1775294384::0::1::::<><><>0<>0<><>::uid://bkoien3o2mpih::::res://games/frogger/scenes/game.gd<>uid://doghmovcgeltw::::res://games/frogger/graphics/map.png<>uid://bdsm7hsurpwsc::::res://games/frogger/scenes/player.tscn<>uid://dgjg7jaublb7b::::res://games/frogger/scenes/tree.tscn<>uid://byr6bflr8terb::::res://games/frogger/scenes/box.tscn<>uid://cxutqp0hti8vw::::res://games/frogger/graphics/objects/bench.png<>uid://c5iy3tuxd0vaw::::res://games/frogger/graphics/objects/barrier.png<>uid://beho7qo80tneo::::res://games/frogger/graphics/objects/bin.png<>uid://y78osdw0bolc::::res://games/frogger/graphics/objects/box1.png<>uid://cv8cli0ov53f1::::res://games/frogger/graphics/objects/box2.png<>uid://cuqeolw7yvunc::::res://games/frogger/graphics/objects/box3.png<>uid://b8fq8sgkmu4dx::::res://games/frogger/graphics/objects/green car.png<>uid://b778fphjcav0::::res://games/frogger/graphics/objects/light.png<>uid://58kopy31xbf8::::res://games/frogger/graphics/objects/taxi.png<>uid://dxciltwc3sgll::::res://games/frogger/graphics/objects/house2.png<>uid://73gfa8tjrcik::::res://games/frogger/graphics/objects/house3.png<>uid://y3ndpd5bhsi3::::res://games/frogger/graphics/objects/tree2.png<>uid://d0so81ys3820n::::res://games/frogger/graphics/objects/tree1.png<>uid://boj6kq1t4mduj::::res://games/frogger/graphics/objects/tree potted.png<>uid://cfe22lwgaf1k2::::res://games/frogger/graphics/objects/traffic.png<>uid://cgvtilagem3np::::res://games/frogger/graphics/objects/red car.png<>uid://oqgtp468wc6x::::res://games/frogger/graphics/objects/sign.png<>uid://d1h0ksxlju0ou::::res://games/frogger/graphics/objects/house1.png<>uid://hqpa84d2dqvp::::res://games/frogger/fonts/Better VCR 9.0.1.ttf<>uid://d05385du5fc0j::::res://games/frogger/audio/S31-City on Speed.ogg<>res://games/frogger/scenes/coin.tscn
+player.gd::GDScript::2010980389636841616::1775262808::0::1::::<>CharacterBody2D<><>0<>0<><>::
+player.tscn::PackedScene::2634932159900400710::1775294384::0::1::::<><><>0<>0<><>::uid://3wes2rlv7w3q::::res://games/frogger/scenes/player.gd<>uid://bkgrir378horu::::res://games/frogger/graphics/player/player_simple.png<>uid://hqpa84d2dqvp::::res://games/frogger/fonts/Better VCR 9.0.1.ttf
+tree.tscn::PackedScene::7599396433676221613::1775294384::0::1::::<><><>0<>0<><>::uid://d0so81ys3820n::::res://games/frogger/graphics/objects/tree1.png
 ::res://mystic_woods_assets/::1775252032
 ::res://mystic_woods_assets/characters/::1775252102
 player.png::CompressedTexture2D::921397214427711241::1775252032::1775252102::1::::<><><>0<>0<>5c0a8b6e53246e005b3186a23afdb65f<>res://.godot/imported/player.png-397bd3dfd970db7901cd8556e2ce0a6b.ctex::
