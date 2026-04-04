@@ -64,10 +64,10 @@ func _ready() -> void:
 	popup_bg.anchor_top = 0.5
 	popup_bg.anchor_right = 0.5
 	popup_bg.anchor_bottom = 0.5
-	popup_bg.offset_left = -220
-	popup_bg.offset_top = -220
-	popup_bg.offset_right = 220
-	popup_bg.offset_bottom = 220
+	popup_bg.offset_left = -230
+	popup_bg.offset_top = -195
+	popup_bg.offset_right = 230
+	popup_bg.offset_bottom = 195
 	popup_bg.visible = false
 	add_child(popup_bg)
 
@@ -78,12 +78,14 @@ func _ready() -> void:
 	content.anchor_top = 0.0
 	content.anchor_right = 1.0
 	content.anchor_bottom = 1.0
-	content.offset_left = 50
-	content.offset_top = 60
-	content.offset_right = -50
-	content.offset_bottom = -55
+	content.offset_left = 60
+	content.offset_top = 70
+	content.offset_right = -60
+	content.offset_bottom = -65
 	content.alignment = BoxContainer.ALIGNMENT_CENTER
-	content.add_theme_constant_override("separation", 8)
+	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	content.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	content.add_theme_constant_override("separation", 10)
 	popup_bg.add_child(content)
 
 	# ── Icon ──
@@ -105,40 +107,39 @@ func _ready() -> void:
 	desc_label.add_theme_font_size_override("font_size", 14)
 	desc_label.add_theme_color_override("font_color", Color(0.82, 0.85, 0.89))
 	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	desc_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	desc_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	content.add_child(desc_label)
 
 	var spacer = Control.new()
-	spacer.custom_minimum_size = Vector2(0, 6)
+	spacer.custom_minimum_size = Vector2(0, 10)
 	content.add_child(spacer)
 
-	# ── Buttons row (wrapped in CenterContainer to prevent stretch) ──
-	var btn_center = CenterContainer.new()
-	btn_center.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	content.add_child(btn_center)
-
+	# ── Buttons row ── (single HBoxContainer, EXPAND_FILL+CENTER = true center)
 	var btn_row = HBoxContainer.new()
 	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	btn_row.add_theme_constant_override("separation", 20)
-	btn_center.add_child(btn_row)
+	btn_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_row.add_theme_constant_override("separation", 24)
+	content.add_child(btn_row)
 
-	# ── OPEN button: open.png 1239x741 (1.67:1) → 120x72 ──
+	# ── OPEN button: open.png 1239x741 (1.67:1) → 90x54 ──
 	open_btn = TextureButton.new()
 	var open_tex = load("res://decorations/open.png")
 	open_btn.texture_normal = open_tex
 	open_btn.ignore_texture_size = true
 	open_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	open_btn.custom_minimum_size = Vector2(120, 72)
+	open_btn.custom_minimum_size = Vector2(90, 54)
 	open_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	open_btn.pressed.connect(_on_play_pressed)
 	btn_row.add_child(open_btn)
 
-	# ── CLOSE button: close.png 1275x733 (1.74:1) → 120x69 ──
+	# ── CLOSE button: close.png 1275x733 (1.74:1) → 90x52 ──
 	close_btn = TextureButton.new()
 	var close_tex = load("res://decorations/close.png")
 	close_btn.texture_normal = close_tex
 	close_btn.ignore_texture_size = true
 	close_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	close_btn.custom_minimum_size = Vector2(120, 69)
+	close_btn.custom_minimum_size = Vector2(90, 52)
 	close_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	close_btn.pressed.connect(_on_close_pressed)
 	btn_row.add_child(close_btn)
